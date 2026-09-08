@@ -16,7 +16,9 @@
     "lint": "eslint src tools tests vite.config.ts",
     "validate:codex": "npm run lint && npm test && npm run build && git diff --check",
     "assets:blender": "python3 tools/build-assets.py",
-    "build:atlas": "VITE_ATLAS_DEEP_LINKS=true npm run build && node tools/stage-atlas.mjs"
+    "build:atlas": "VITE_ATLAS_DEEP_LINKS=true npm run build && node tools/stage-atlas.mjs",
+    "build:azure": "npm run build && node tools/stage-azure.mjs && node tools/verify-azure.mjs",
+    "verify:azure": "node tools/verify-azure.mjs"
   },
   "dependencies": {
     "@fontsource/geist": "^5.2.6",

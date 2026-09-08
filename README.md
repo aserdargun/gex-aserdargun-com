@@ -49,6 +49,12 @@ npm run build:azure
 
 `VITE_ATLAS_DEEP_LINKS=true` makes the integrated GEX return to the Atlas on the same origin. `VITE_ATLAS_ORIGIN` can explicitly override that origin for a separate development setup. All static resources live below `/gex/` so they cannot collide with Atlas assets.
 
+## Azure publication
+
+The standalone release retains `/gex/...` routes and links back to the public GPU Atlas. `npm run build:azure` stages `azure-artifact/gex/`, verifies route and asset integrity, and writes commit-correlated `/release.json` metadata. The combined Atlas integration above remains a separate release path.
+
+GitHub Actions deploys `main` using the single workflow `.github/workflows/deploy-swa-gex-aserdargun-com.yml`. The target is `swa-gex-aserdargun-com` in `rg-gex-aserdargun-com`, West Europe, **Free**, on **aserdargun subscription 3**. Deployment credentials exist only as an Actions secret. No custom domain is configured by this workflow.
+
 ## Geometry and source
 
 - `blender/gex-master.blend`: editable hardware master, named anchors and reusable cameras.

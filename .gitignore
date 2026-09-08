@@ -1,6 +1,7 @@
 node_modules/
 dist/
 atlas-artifact/
+azure-artifact/
 .local/
 *.tsbuildinfo
 *.blend1

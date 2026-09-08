@@ -1,0 +1,26 @@
+{
+  "routes": [
+    { "route": "/", "redirect": "/gex/anatomy", "statusCode": 302 },
+    { "route": "/gex", "rewrite": "/gex/index.html" },
+    { "route": "/gex/", "rewrite": "/gex/index.html" },
+    { "route": "/gex/anatomy", "rewrite": "/gex/anatomy/index.html" },
+    { "route": "/gex/anatomy/", "rewrite": "/gex/anatomy/index.html" },
+    { "route": "/gex/sm", "rewrite": "/gex/sm/index.html" },
+    { "route": "/gex/sm/", "rewrite": "/gex/sm/index.html" },
+    { "route": "/gex/kernel", "rewrite": "/gex/kernel/index.html" },
+    { "route": "/gex/kernel/", "rewrite": "/gex/kernel/index.html" },
+    { "route": "/gex/warp", "rewrite": "/gex/warp/index.html" },
+    { "route": "/gex/warp/", "rewrite": "/gex/warp/index.html" },
+    { "route": "/gex/memory", "rewrite": "/gex/memory/index.html" },
+    { "route": "/gex/memory/", "rewrite": "/gex/memory/index.html" },
+    { "route": "/gex/tensor", "rewrite": "/gex/tensor/index.html" },
+    { "route": "/gex/tensor/", "rewrite": "/gex/tensor/index.html" },
+    { "route": "/release.json", "headers": { "Cache-Control": "no-store" } },
+    { "route": "/gex/release.json", "headers": { "Cache-Control": "no-store" } }
+  ],
+  "mimeTypes": { ".glb": "model/gltf-binary", ".cu": "text/plain" },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin"
+  }
+}
