@@ -1,0 +1,7 @@
+node_modules/
+dist/
+atlas-artifact/
+.local/
+*.tsbuildinfo
+*.blend1
+.DS_Store

@@ -1,0 +1,20 @@
+version = 1
+name = "GEX — GPU Execution Explorer"
+
+[setup]
+script = "npm ci --legacy-peer-deps"
+
+[[actions]]
+name = "Run"
+icon = "run"
+command = "npm run dev:codex"
+
+[[actions]]
+name = "Validate"
+icon = "tool"
+command = "npm run validate:codex"
+
+[[actions]]
+name = "Stop"
+icon = "tool"
+command = "npm run stop:local"

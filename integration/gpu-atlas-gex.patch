@@ -1,0 +1,229 @@
+diff --git a/.gitignore b/.gitignore
+index c692cbe..48c2519 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -40,3 +40,5 @@ yarn-error.log*
+ /outputs/
+ /work/
+ /.worktrees/
++
++/gex-dist/
+diff --git a/app/atlas/AtlasShell.tsx b/app/atlas/AtlasShell.tsx
+index d249623..1239b3d 100644
+--- a/app/atlas/AtlasShell.tsx
++++ b/app/atlas/AtlasShell.tsx
+@@ -43,6 +43,7 @@ export function AtlasShell({
+         </button>
+         <nav className="atlas-topnav" aria-label={copy.mainNav}>
+           <a href="#roadmap" onClick={onShowOverview}>{copy.weeks}</a>
++          <a href={`/gex/anatomy?lang=${locale}`}>GEX · {locale === "tr" ? "3B keşfet" : "Explore in 3D"}</a>
+         </nav>
+         <div className="atlas-locale" role="group" aria-label={locale === "tr" ? "Dil seçimi" : "Language selection"}>
+           <button className={locale === "tr" ? "active" : undefined} onClick={() => onLocaleChange("tr")} aria-pressed={locale === "tr"}>TR</button>
+diff --git a/app/atlas/ModuleFrame.tsx b/app/atlas/ModuleFrame.tsx
+index 3a73873..8eff12e 100644
+--- a/app/atlas/ModuleFrame.tsx
++++ b/app/atlas/ModuleFrame.tsx
+@@ -18,6 +18,13 @@ export type ModuleFrameProps = {
+ export function ModuleFrame({ module, locale, completed, showCompletionActions, onToggleComplete, onNext, children }: ModuleFrameProps) {
+   const copy = uiByLocale[locale];
+   const headingRef = useRef<HTMLHeadingElement>(null);
++  const gexLinks: Record<string, readonly [string, string, string][]> = {
++    visual: [["anatomy", "GPU anatomisini keşfet", "Explore GPU anatomy"]],
++    architecture: [["sm", "SM’nin içine gir", "Inside an SM"], ["kernel", "Bir kerneli izle", "Follow a kernel"], ["warp", "SIMT’yi görselleştir", "Visualize SIMT"]],
++    memory: [["memory", "Bellek desenini görselleştir", "Visualize memory access"]],
++    operators: [["tensor", "Döşemeli GEMM’i keşfet", "Explore tiled GEMM"]],
++    cutlass: [["tensor", "Tensor yürütmesini keşfet", "Explore Tensor execution"]],
++  };
+ 
+   useEffect(() => {
+     const root = document.documentElement;
+@@ -39,6 +46,9 @@ export function ModuleFrame({ module, locale, completed, showCompletionActions,
+         <h1 ref={headingRef} tabIndex={-1} data-testid="atlas-module-title">{module.title}</h1>
+         <p>{module.description}</p>
+         <div className="tag-row">{module.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
++        {gexLinks[module.id] ? <nav className="atlas-gex-links" aria-label={locale === "tr" ? "GEX görselleştirmeleri" : "GEX visualizations"}>
++          {gexLinks[module.id].map(([mode, tr, en]) => <a key={mode} href={`/gex/${mode}?lang=${locale}`}>{locale === "tr" ? tr : en} <span aria-hidden="true">↗</span></a>)}
++        </nav> : null}
+         {module.maturity === "preview" || module.architectures.includes("rubin") ? <p className="preview-caveat">{copy.previewCaveat}</p> : null}
+       </section>
+       <section className="module-foundation">
+diff --git a/app/atlas/atlas-shell.css b/app/atlas/atlas-shell.css
+index 4368231..7c1de39 100644
+--- a/app/atlas/atlas-shell.css
++++ b/app/atlas/atlas-shell.css
+@@ -109,3 +109,8 @@
+     .atlas-progress i b, .atlas-side-foot > i b { transition: none; }
+   }
+ }
++
++/* GEX links stay in the curriculum, with the current locale preserved. */
++.atlas-app .atlas-gex-links { display:flex; flex-wrap:wrap; gap:10px; margin:18px 0 0; }
++.atlas-app .atlas-gex-links a { display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:10px 14px; border:1px solid currentColor; border-radius:5px; color:var(--text, #d5e3e1); font-size:13px; }
++.atlas-app .atlas-gex-links a:focus-visible { outline:2px solid currentColor; outline-offset:4px; }
+diff --git a/app/kernel-atlas.tsx b/app/kernel-atlas.tsx
+index 6e4930f..464f165 100644
+--- a/app/kernel-atlas.tsx
++++ b/app/kernel-atlas.tsx
+@@ -88,6 +88,20 @@ export default function KernelAtlas({ initialLocale }: { initialLocale: Locale }
+     };
+   }, []);
+ 
++  // GEX integration: module URLs work on initial load, locale changes and history navigation.
++  useEffect(() => {
++    const syncModule = () => {
++      const id = /^#module=([a-z]+)$/.exec(window.location.hash)?.[1];
++      window.queueMicrotask(() => {
++        setActiveId(id && validModuleIds.has(id as ModuleId) ? id as ModuleId : null);
++        setMenuOpen(false);
++      });
++    };
++    syncModule();
++    window.addEventListener("hashchange", syncModule);
++    return () => window.removeEventListener("hashchange", syncModule);
++  }, []);
++
+   const modules = modulesByLocale[locale];
+   const changeLocale = (next: Locale) => {
+     const url = new URL(window.location.href);
+@@ -114,6 +128,7 @@ export default function KernelAtlas({ initialLocale }: { initialLocale: Locale }
+   const progress = Math.round((completed.length / modules.length) * 100);
+ 
+   const openModule = useCallback((id: ModuleId) => {
++    window.history.pushState(null, "", `#module=${id}`);
+     setActiveId(id);
+     setLastVisitedId(id);
+     writeLastVisited(acquireLocalStorage(window), id);
+@@ -121,6 +136,7 @@ export default function KernelAtlas({ initialLocale }: { initialLocale: Locale }
+   }, []);
+ 
+   const showOverview = useCallback(() => {
++    window.history.pushState(null, "", window.location.pathname + window.location.search);
+     setActiveId(null);
+     setMenuOpen(false);
+   }, []);
+diff --git a/eslint.config.mjs b/eslint.config.mjs
+index 814b958..dc7a755 100644
+--- a/eslint.config.mjs
++++ b/eslint.config.mjs
+@@ -11,6 +11,7 @@ const eslintConfig = defineConfig([
+   globalIgnores([
+     ".next/**",
+     "dist/**",
++    "gex-dist/**",
+     "out/**",
+     "build/**",
+     "next-env.d.ts",
+diff --git a/staticwebapp.config.json b/staticwebapp.config.json
+index 10f0f16..9fdc72b 100644
+--- a/staticwebapp.config.json
++++ b/staticwebapp.config.json
+@@ -4,12 +4,73 @@
+     "exclude": [
+       "/_next/*",
+       "/*.svg",
+-      "/*.png"
++      "/*.png",
++      "/gex/assets/*",
++      "/gex/models/*",
++      "/gex/examples/*"
+     ]
+   },
+   "globalHeaders": {
+     "Referrer-Policy": "strict-origin-when-cross-origin",
+     "X-Content-Type-Options": "nosniff",
+     "X-Frame-Options": "DENY"
++  },
++  "routes": [
++    {
++      "route": "/gex/anatomy",
++      "rewrite": "/gex/anatomy/index.html"
++    },
++    {
++      "route": "/gex/anatomy/",
++      "rewrite": "/gex/anatomy/index.html"
++    },
++    {
++      "route": "/gex/sm",
++      "rewrite": "/gex/sm/index.html"
++    },
++    {
++      "route": "/gex/sm/",
++      "rewrite": "/gex/sm/index.html"
++    },
++    {
++      "route": "/gex/kernel",
++      "rewrite": "/gex/kernel/index.html"
++    },
++    {
++      "route": "/gex/kernel/",
++      "rewrite": "/gex/kernel/index.html"
++    },
++    {
++      "route": "/gex/warp",
++      "rewrite": "/gex/warp/index.html"
++    },
++    {
++      "route": "/gex/warp/",
++      "rewrite": "/gex/warp/index.html"
++    },
++    {
++      "route": "/gex/memory",
++      "rewrite": "/gex/memory/index.html"
++    },
++    {
++      "route": "/gex/memory/",
++      "rewrite": "/gex/memory/index.html"
++    },
++    {
++      "route": "/gex/tensor",
++      "rewrite": "/gex/tensor/index.html"
++    },
++    {
++      "route": "/gex/tensor/",
++      "rewrite": "/gex/tensor/index.html"
++    },
++    {
++      "route": "/gex",
++      "rewrite": "/gex/index.html"
++    }
++  ],
++  "mimeTypes": {
++    ".glb": "model/gltf-binary",
++    ".cu": "text/plain"
+   }
+ }
+diff --git a/tests/rendered-html.test.mjs b/tests/rendered-html.test.mjs
+index 01eb4cc..5a8722e 100644
+--- a/tests/rendered-html.test.mjs
++++ b/tests/rendered-html.test.mjs
+@@ -82,7 +82,7 @@ test("server-renders the complete Turkish shell and metadata", async () => {
+   assert.match(html, /<title>GPU - GPU Kernel Engineering<\/title>/i);
+   assert.match(html, /<b>GPU KERNEL ATLAS<\/b><small>GPU KERNEL MÜHENDİSLİĞİ<\/small>/);
+   assert.match(html, /aria-label="GPU Kernel Atlas ana sayfa"/);
+-  assert.match(html, /<nav class="atlas-topnav" aria-label="Ana navigasyon"><a href="#roadmap">12 hafta<\/a><\/nav>/);
++  assert.match(html, /<nav class="atlas-topnav" aria-label="Ana navigasyon"><a href="#roadmap">12 hafta<\/a><a href="\/gex\/anatomy\?lang=tr">GEX · <!-- -->3B keşfet<\/a><\/nav>/);
+   assert.doesNotMatch(html, /<button[^>]*>Genel bakış<\/button>|<button[^>]*>Atlas<\/button>/);
+   assert.match(html, /property="og:title" content="GPU - GPU Kernel Engineering"/);
+   assert.match(html, /name="twitter:title" content="GPU - GPU Kernel Engineering"/);
+@@ -126,7 +126,7 @@ test("server-renders the complete English shell with request-aware production me
+   assert.match(html, /<title>GPU - GPU Kernel Engineering<\/title>/i);
+   assert.match(html, /<b>GPU KERNEL ATLAS<\/b><small>GPU KERNEL ENGINEERING<\/small>/);
+   assert.match(html, /aria-label="GPU Kernel Atlas home"/);
+-  assert.match(html, /<nav class="atlas-topnav" aria-label="Main navigation"><a href="#roadmap">12 weeks<\/a><\/nav>/);
++  assert.match(html, /<nav class="atlas-topnav" aria-label="Main navigation"><a href="#roadmap">12 weeks<\/a><a href="\/gex\/anatomy\?lang=en">GEX · <!-- -->Explore in 3D<\/a><\/nav>/);
+   assert.doesNotMatch(html, /<button[^>]*>Overview<\/button>|<button[^>]*>Atlas<\/button>/);
+   assert.match(html, /property="og:title" content="GPU - GPU Kernel Engineering"/);
+   assert.match(html, /name="twitter:title" content="GPU - GPU Kernel Engineering"/);
+diff --git a/tools/build-azure-static.mjs b/tools/build-azure-static.mjs
+index fab88dd..cc440cd 100644
+--- a/tools/build-azure-static.mjs
++++ b/tools/build-azure-static.mjs
+@@ -45,4 +45,6 @@ await writeFile(
+   "utf8",
+ );
+ 
+-console.log(`Azure static artifact written to ${out}`);
++// Fail the integrated build if the separately built GEX artifact is missing.
++await cp(resolve(root, "gex-dist"), resolve(out, "gex"), { recursive: true });
++console.log(`Azure static artifact written to ${out}, including /gex.`);

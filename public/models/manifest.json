@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "units": "educational units",
+  "axes": "glTF Y-up",
+  "abstraction": "educational geometry; not a literal floorplan",
+  "illustrativeSmCount": 16,
+  "files": [
+    {
+      "file": "gex-gpu.glb",
+      "bytes": 641056
+    },
+    {
+      "file": "gex-sm.glb",
+      "bytes": 257720
+    }
+  ],
+  "source": "blender/build_scene.py",
+  "animationOwner": "web lesson state",
+  "anchors": [
+    "GEX_ANCHOR_EXECUTION_UNITS",
+    "GEX_ANCHOR_GLOBAL_MEMORY",
+    "GEX_ANCHOR_GPU_DIE",
+    "GEX_ANCHOR_HOST_INTERFACE",
+    "GEX_ANCHOR_L2",
+    "GEX_ANCHOR_LOAD_STORE",
+    "GEX_ANCHOR_MEMORY_CONTROLLER",
+    "GEX_ANCHOR_REGISTER_FILE",
+    "GEX_ANCHOR_SHARED_L1",
+    "GEX_ANCHOR_SM",
+    "GEX_ANCHOR_TENSOR_UNITS",
+    "GEX_ANCHOR_WARP_SCHEDULER",
+    "GEX_ANCHORS"
+  ],
+  "cameras": [
+    "GEX_CAM_BOARD",
+    "GEX_CAM_DIE",
+    "GEX_CAM_GPU_HERO",
+    "GEX_CAM_MEMORY",
+    "GEX_CAM_SM_INSIDE",
+    "GEX_CAM_SM_OVERVIEW",
+    "GEX_CAM_TENSOR",
+    "GEX_CAM_WARP"
+  ],
+  "meshObjects": 109,
+  "uniqueMeshes": 94
+}
