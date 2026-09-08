@@ -115,10 +115,10 @@ index 814b958..dc7a755 100644
      "build/**",
      "next-env.d.ts",
 diff --git a/staticwebapp.config.json b/staticwebapp.config.json
-index 10f0f16..9fdc72b 100644
+index 10f0f16..069875f 100644
 --- a/staticwebapp.config.json
 +++ b/staticwebapp.config.json
-@@ -4,12 +4,73 @@
+@@ -4,12 +4,49 @@
      "exclude": [
        "/_next/*",
        "/*.svg",
@@ -140,15 +140,7 @@ index 10f0f16..9fdc72b 100644
 +      "rewrite": "/gex/anatomy/index.html"
 +    },
 +    {
-+      "route": "/gex/anatomy/",
-+      "rewrite": "/gex/anatomy/index.html"
-+    },
-+    {
 +      "route": "/gex/sm",
-+      "rewrite": "/gex/sm/index.html"
-+    },
-+    {
-+      "route": "/gex/sm/",
 +      "rewrite": "/gex/sm/index.html"
 +    },
 +    {
@@ -156,15 +148,7 @@ index 10f0f16..9fdc72b 100644
 +      "rewrite": "/gex/kernel/index.html"
 +    },
 +    {
-+      "route": "/gex/kernel/",
-+      "rewrite": "/gex/kernel/index.html"
-+    },
-+    {
 +      "route": "/gex/warp",
-+      "rewrite": "/gex/warp/index.html"
-+    },
-+    {
-+      "route": "/gex/warp/",
 +      "rewrite": "/gex/warp/index.html"
 +    },
 +    {
@@ -172,15 +156,7 @@ index 10f0f16..9fdc72b 100644
 +      "rewrite": "/gex/memory/index.html"
 +    },
 +    {
-+      "route": "/gex/memory/",
-+      "rewrite": "/gex/memory/index.html"
-+    },
-+    {
 +      "route": "/gex/tensor",
-+      "rewrite": "/gex/tensor/index.html"
-+    },
-+    {
-+      "route": "/gex/tensor/",
 +      "rewrite": "/gex/tensor/index.html"
 +    },
 +    {

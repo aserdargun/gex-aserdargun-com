@@ -13,6 +13,14 @@ assert.match(release.commit, /^[0-9a-f]{40}$/);
 assert.equal(release.repository, "aserdargun/gex-aserdargun-com");
 assert.equal(config.mimeTypes[".glb"], "model/gltf-binary");
 assert.equal(config.mimeTypes[".cu"], "text/plain");
+const normalizedRoutes = config.routes.map(
+  (r) => r.route.replace(/\/+$/, "") || "/",
+);
+assert.equal(
+  new Set(normalizedRoutes).size,
+  normalizedRoutes.length,
+  "Azure treats trailing-slash routes as duplicates",
+);
 for (const mode of ["anatomy", "sm", "kernel", "warp", "memory", "tensor"]) {
   const html = await readFile(
     new URL(`gex/${mode}/index.html`, output),
