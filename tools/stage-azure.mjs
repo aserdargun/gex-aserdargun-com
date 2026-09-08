@@ -4,6 +4,10 @@ import { execFileSync } from "node:child_process";
 const output = new URL("../azure-artifact/", import.meta.url);
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
+await cp(
+  new URL("../dist/index.html", import.meta.url),
+  new URL("index.html", output),
+);
 await cp(new URL("../dist/", import.meta.url), new URL("gex/", output), {
   recursive: true,
 });

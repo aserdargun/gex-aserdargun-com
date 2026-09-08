@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const output = new URL("../azure-artifact/", import.meta.url);
+assert.match(await readFile(new URL("index.html", output), "utf8"), /GEX/);
 const config = JSON.parse(
   await readFile(new URL("staticwebapp.config.json", output), "utf8"),
 );
