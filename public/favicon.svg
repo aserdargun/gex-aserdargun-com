@@ -1,1 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 44"><path d="M20 2 37 11 20 20 3 11Z" fill="#abd8c1"/><path d="M3 15 18 23 18 42 3 33Z" fill="#91bda9"/><path d="M22 23 37 15 37 33 22 42Z" fill="#618b79"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-label="gex">
+  <rect width="320" height="320" rx="64" fill="#121310"/>
+  <circle cx="160" cy="142" r="108" fill="#c8ff36"/>
+  <g transform="translate(60 42)" stroke="#0c0d0a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="22" y="22" width="156" height="156" rx="8" fill="none" />
+    <g fill="#0c0d0a">
+      <rect x="34" y="34" width="22" height="22" />
+      <rect x="68" y="34" width="22" height="22" />
+      <rect x="102" y="34" width="22" height="22" />
+      <rect x="136" y="34" width="22" height="22" />
+      <rect x="34" y="68" width="22" height="22" />
+      <rect x="102" y="68" width="22" height="22" />
+      <rect x="136" y="68" width="22" height="22" />
+      <rect x="34" y="102" width="22" height="22" />
+      <rect x="68" y="102" width="22" height="22" />
+      <rect x="136" y="102" width="22" height="22" />
+      <rect x="68" y="136" width="22" height="22" />
+      <rect x="102" y="136" width="22" height="22" />
+      <rect x="136" y="136" width="22" height="22" />
+    </g>
+  </g>
+  <text x="160" y="296" text-anchor="middle" fill="#c8ff36"
+    font-family="Inter, Helvetica, Arial, sans-serif" font-size="40" font-weight="800"
+    letter-spacing="-2">GEX</text>
+</svg>
