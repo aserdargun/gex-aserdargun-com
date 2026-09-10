@@ -1,4 +1,11 @@
 import {
+  semanticContextFromUrl,
+  buildReturnLearningLink,
+  buildLearningLink,
+  type SemanticContext,
+} from "@aserdargun/lab-core";
+import { learningGraph } from "./graph";
+import {
   contextFromUrl,
   learningLink,
   type LearningContext,
@@ -24,9 +31,20 @@ function isComputePayload(
   );
 }
 
-export function readGexContext(
-  url: URL,
-): LearningContext<ComputePayload> | null {
+export type GexContext =
+  | LearningContext<ComputePayload>
+  | SemanticContext<"gpu-execution">;
+export function readGexContext(url: URL): GexContext | null {
+  const semantic = semanticContextFromUrl(url, "gex", learningGraph);
+  if (
+    semantic?.profile === "gpu-execution" &&
+    semantic.sourceLab === "tfl" &&
+    semantic.targetConcept ===
+      (semantic.payload.phase === "prefill"
+        ? "concept:tensor-compute"
+        : "concept:gpu-memory")
+  )
+    return semantic;
   const c = contextFromUrl(url, "gex");
   if (!c || c.sourceLab !== "tfl" || !isComputePayload(c.payload)) return null;
   if (
@@ -38,16 +56,34 @@ export function readGexContext(
     return null;
   return { ...c, payload: c.payload };
 }
-export function contextMode(context: LearningContext<ComputePayload>) {
-  return context.payload.workload === "prefill" ? "tensor" : "memory";
+export function contextMode(context: GexContext) {
+  return ("phase" in context.payload
+    ? context.payload.phase
+    : context.payload.workload) === "prefill"
+    ? "tensor"
+    : "memory";
 }
 export function returnToServing(
-  context: LearningContext<ComputePayload> | null,
+  context: GexContext | null,
   mode: string,
   locale: Locale,
 ): string {
+  if (context && "phase" in context.payload)
+    return (
+      buildReturnLearningLink(
+        learningGraph,
+        context as SemanticContext<"gpu-execution">,
+        locale,
+      ) ??
+      buildLearningLink(learningGraph, {
+        targetApp: "tfl",
+        experimentId: "single",
+        locale,
+      })
+    );
+  const legacy = context as LearningContext<ComputePayload> | null;
   const workload =
-    context?.payload.workload ?? (mode === "memory" ? "decode" : "prefill");
+    legacy?.payload.workload ?? (mode === "memory" ? "decode" : "prefill");
   const destination = new URL(
     manifest.related.labs!.find((x) => x.id === "tfl")!.url,
   );
@@ -61,7 +97,7 @@ export function returnToServing(
       sourceExperiment: mode,
       targetLab: "tfl",
       targetConcept: `concept:${workload}`,
-      payload: context?.payload ?? {
+      payload: legacy?.payload ?? {
         workload,
         batchClass: "single",
         sequenceClass: "short",
@@ -71,6 +107,6 @@ export function returnToServing(
   );
 }
 export const contextExplanation = {
-  en: "Serving compute maps to an existing GPU teaching scene. Batch and sequence classes describe the source; no request state, exact timing or hardware workload is transferred.",
-  tr: "Sunum hesaplaması mevcut GPU eğitim sahnesine eşlenir. Grup ve dizi sınıfları kaynağı tanımlar; istek durumu, kesin süre veya donanım iş yükü aktarılmaz.",
+  en: "Serving compute maps to an existing GPU teaching scene. The context describes the source educational workload; no request state, exact timing or hardware workload is transferred.",
+  tr: "Sunum hesaplaması mevcut GPU eğitim sahnesine eşlenir. Bağlam kaynak eğitim iş yükünü tanımlar; istek durumu, kesin süre veya donanım iş yükü aktarılmaz.",
 };
