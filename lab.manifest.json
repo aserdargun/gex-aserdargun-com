@@ -6,7 +6,7 @@
   "canonicalUrl": "https://gex.aserdargun.com/gex/",
   "type": "interactive-lab",
   "parentApp": "gpu",
-  "status": "preview",
+  "status": "live",
   "tagline": {
     "en": "See how a kernel becomes hardware execution.",
     "tr": "Bir kernelin donanımda nasıl yürütüldüğünü gör."

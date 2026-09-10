@@ -85,4 +85,4 @@ Both packages are consumed through committed, content-addressed `vendor/*.tgz` a
 
 TFL prefill links open the existing tensor scene; decode links open memory. A validated 1 KB maximum educational context produces a localized origin notice and a return link to a paused TFL checkpoint. Batch/sequence classes describe the source without inventing a GPU workload. Existing routes, numerical model, 3D scenes and playback remain app-owned. Invalid context is ignored. The published manifest artifact path is `/gex/lab.manifest.json`.
 
-Manifest status `preview` describes this ILS pilot; local validation does not mean these changes were deployed. Canonical ILS documents include the migration guide, compatibility checklist, protocol, architecture review and cross-lab browser acceptance test.
+Manifest status `live` identifies the GEX/TFL production release; deployment must still be verified against its source commit. Canonical ILS documents include the migration guide, compatibility checklist, protocol, architecture review and cross-lab browser acceptance test.
