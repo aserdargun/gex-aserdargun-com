@@ -1887,3 +1887,9 @@ select option {
   border-color: #6c7061;
   background: #ffedc233;
 }
+
+/* ILS participates in the existing mobile lesson order. */
+@media (max-width: 800px) {
+  .main > .ils-context { order: 2; }
+  .main > .ils-shell { order: 7; }
+}

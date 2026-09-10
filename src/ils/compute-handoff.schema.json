@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GEX TFL educational compute handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["workload", "batchClass", "sequenceClass"],
+  "properties": {
+    "workload": {
+      "enum": ["prefill", "decode"]
+    },
+    "batchClass": {
+      "enum": ["single", "multiple"]
+    },
+    "sequenceClass": {
+      "enum": ["short", "long"]
+    }
+  }
+}

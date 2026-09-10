@@ -1,15 +1,29 @@
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { parseLocation, reducer, stateUrl, type Action } from "./state";
 import type { ExplorerState, Mode } from "../data/types";
 
+import { CONTEXT_PARAM, encodeLearningContext } from "@aserdargun/lab-core";
+import { readGexContext, contextMode } from "../ils/context";
+function entryState(url: URL) {
+  const context = readGexContext(url);
+  if (context) {
+    url = new URL(url);
+    url.pathname = `/gex/${contextMode(context)}`;
+  }
+  return parseLocation(url);
+}
 export function useExplorer() {
+  const [learningContext, setLearningContext] = useState(() =>
+    readGexContext(new URL(window.location.href)),
+  );
   const [state, dispatch] = useReducer(reducer, undefined, () => ({
-    ...parseLocation(new URL(window.location.href)),
+    ...entryState(new URL(window.location.href)),
     reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)")
       .matches,
   }));
   const navigate = useCallback(
     (mode: Mode) => {
+      setLearningContext(null);
       const next = reducer(state, { type: "navigate", mode });
       window.history.pushState(null, "", stateUrl(next));
       dispatch({ type: "navigate", mode });
@@ -22,15 +36,21 @@ export function useExplorer() {
   );
   const act = useCallback((action: Action) => dispatch(action), []);
   useEffect(() => {
-    window.history.replaceState(null, "", stateUrl(state));
+    const url = new URL(stateUrl(state), window.location.origin);
+    if (learningContext)
+      url.searchParams.set(
+        CONTEXT_PARAM,
+        encodeLearningContext(learningContext),
+      );
+    window.history.replaceState(null, "", url);
     document.documentElement.lang = state.locale;
-  }, [state]);
+  }, [state, learningContext]);
   useEffect(() => {
-    const pop = () =>
-      dispatch({
-        type: "restore",
-        state: parseLocation(new URL(window.location.href)),
-      });
+    const pop = () => {
+      const url = new URL(window.location.href);
+      setLearningContext(readGexContext(url));
+      dispatch({ type: "restore", state: entryState(url) });
+    };
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const motion = () =>
       dispatch({
@@ -57,6 +77,6 @@ export function useExplorer() {
     );
     return () => window.clearTimeout(id);
   }, [state.playing, state.step, state.mode, state.speed]);
-  return { state, act, patch, navigate };
+  return { state, act, patch, navigate, learningContext };
 }
 export type Explorer = ReturnType<typeof useExplorer>;

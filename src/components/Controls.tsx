@@ -1,3 +1,5 @@
+import { LabControlButton } from "@aserdargun/lab-ui";
+import { manifest, guidedLesson } from "../ils/catalog";
 import { Play, Pause, SkipForward, RotateCcw, ChevronLeft } from "lucide-react";
 import { lessons } from "../data/lessons";
 import type { Explorer } from "../lib/useExplorer";
@@ -15,43 +17,57 @@ export function Playback({ state, act, patch }: Explorer) {
       aria-label={tr ? "Yürütme kontrolleri" : "Execution controls"}
     >
       <div className="transport">
-        <button
+        <LabControlButton
+          action={state.playing ? "pause" : "play"}
+          capabilities={manifest.capabilities}
+          locale={state.locale}
           className="play-button"
           onClick={() => act({ type: "play" })}
           aria-label={
             state.playing ? (tr ? "Duraklat" : "Pause") : tr ? "Oynat" : "Play"
           }
-          title={state.playing ? "Pause" : "Play"}
+          title={
+            state.playing ? (tr ? "Duraklat" : "Pause") : tr ? "Oynat" : "Play"
+          }
         >
           {state.playing ? (
             <Pause size={20} fill="currentColor" />
           ) : (
             <Play size={20} fill="currentColor" />
           )}
-        </button>
-        <button
+        </LabControlButton>
+        <LabControlButton
+          action="rewind"
+          capabilities={manifest.capabilities}
+          locale={state.locale}
           className="icon-button previous"
           onClick={() => act({ type: "step", value: state.step - 1 })}
           disabled={state.step === 0}
           aria-label={tr ? "Önceki olay" : "Previous event"}
         >
           <ChevronLeft size={18} />
-        </button>
-        <button
+        </LabControlButton>
+        <LabControlButton
+          action="step"
+          capabilities={manifest.capabilities}
+          locale={state.locale}
           className="icon-button"
           onClick={() => act({ type: "step", value: state.step + 1 })}
           disabled={state.step === all.length - 1}
           aria-label={tr ? "Sonraki olay" : "Next event"}
         >
           <SkipForward size={19} />
-        </button>
-        <button
+        </LabControlButton>
+        <LabControlButton
+          action="reset"
+          capabilities={manifest.capabilities}
+          locale={state.locale}
           className="icon-button"
           onClick={() => act({ type: "reset" })}
           aria-label={tr ? "Yürütmeyi sıfırla" : "Reset execution"}
         >
           <RotateCcw size={18} />
-        </button>
+        </LabControlButton>
         <label className="speed">
           <span className="sr-only">
             {tr ? "Oynatma hızı" : "Playback speed"}
@@ -86,6 +102,11 @@ export function Playback({ state, act, patch }: Explorer) {
             <button
               onClick={() => act({ type: "step", value: i })}
               aria-current={currentGroup === i ? "step" : undefined}
+              title={
+                state.mode === "kernel"
+                  ? guidedLesson.steps[i].title[state.locale]
+                  : undefined
+              }
             >
               <i aria-hidden="true" />
               <span>{all[i].label[state.locale]}</span>

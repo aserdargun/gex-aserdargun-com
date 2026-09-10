@@ -1,0 +1,476 @@
+[
+  {
+    "schemaVersion": "0.1",
+    "id": "anatomy",
+    "title": {
+      "en": "GPU Anatomy",
+      "tr": "GPU Anatomisi"
+    },
+    "guidingQuestion": {
+      "en": "How do GPU components cooperate to execute a kernel?",
+      "tr": "GPU bileşenleri bir kerneli yürütmek için nasıl birlikte çalışır?"
+    },
+    "description": {
+      "en": "Explore the structures that turn a kernel into parallel work. Select a part, then move closer.",
+      "tr": "Bir kerneli paralel işe dönüştüren yapıları keşfet. Bir parça seç ve yakından incele."
+    },
+    "concepts": ["concept:gpu-anatomy", "concept:gpu-memory"],
+    "learningObjectives": [
+      {
+        "en": "Compute needs data. The distance and relationships between resources help explain why a GPU is more than a core count.",
+        "tr": "Hesaplama veriye ihtiyaç duyar. Kaynakların konumu ve ilişkileri, GPU’nun çekirdek sayısından fazlası olduğunu açıklar."
+      }
+    ],
+    "controls": [
+      {
+        "id": "timeline",
+        "label": {
+          "en": "Execution events",
+          "tr": "Yürütme olayları"
+        },
+        "description": {
+          "en": "Step through the existing educational timeline.",
+          "tr": "Mevcut eğitim zaman çizelgesinde adımla."
+        }
+      }
+    ],
+    "observations": [
+      {
+        "id": "mechanism",
+        "label": {
+          "en": "GPU Anatomy",
+          "tr": "GPU Anatomisi"
+        },
+        "explanation": {
+          "en": "Select the die, then follow a kernel.",
+          "tr": "Yongayı seç, ardından bir kerneli izle."
+        },
+        "evidenceRefs": ["conceptual-execution", "numerical-reference"]
+      }
+    ],
+    "assumptionRefs": ["conceptual-gpu", "cuda-scope"],
+    "evidenceRefs": ["conceptual-execution", "numerical-reference"],
+    "relatedTheory": [
+      {
+        "id": "gpu",
+        "label": {
+          "en": "Learn the theory · GPU Kernel Atlas",
+          "tr": "Kuramı öğren · GPU Kernel Atlas"
+        },
+        "url": "https://gpu.aserdargun.com/en",
+        "localizedUrls": {
+          "en": "https://gpu.aserdargun.com/en",
+          "tr": "https://gpu.aserdargun.com/tr"
+        }
+      }
+    ],
+    "relatedLabs": [
+      {
+        "id": "tfl",
+        "label": {
+          "en": "Explore serving · TFL",
+          "tr": "Sunumu keşfet · TFL"
+        },
+        "url": "https://tfl.aserdargun.com/"
+      }
+    ],
+    "config": {
+      "mode": "anatomy"
+    }
+  },
+  {
+    "schemaVersion": "0.1",
+    "id": "sm",
+    "title": {
+      "en": "Inside an SM",
+      "tr": "SM’nin İçinde"
+    },
+    "guidingQuestion": {
+      "en": "How do an SM’s schedulers, registers and execution resources cooperate?",
+      "tr": "Bir SM’nin zamanlayıcıları, yazmaçları ve yürütme kaynakları nasıl birlikte çalışır?"
+    },
+    "description": {
+      "en": "Inspect the resources of a conceptual streaming multiprocessor. Step through a scheduler example.",
+      "tr": "Kavramsal bir streaming multiprocessor’ın kaynaklarını incele. Bir zamanlama örneğini adım adım izle."
+    },
+    "concepts": ["concept:sm", "concept:simt"],
+    "learningObjectives": [
+      {
+        "en": "A waiting warp can leave room for another ready warp to issue. Registers and shared memory limit the work that can reside here.",
+        "tr": "Bekleyen warp varken hazır başka bir warp komut başlatabilir. Yazmaçlar ve paylaşılan bellek, burada bulunabilecek işi sınırlar."
+      }
+    ],
+    "controls": [
+      {
+        "id": "timeline",
+        "label": {
+          "en": "Execution events",
+          "tr": "Yürütme olayları"
+        },
+        "description": {
+          "en": "Step through the existing educational timeline.",
+          "tr": "Mevcut eğitim zaman çizelgesinde adımla."
+        }
+      }
+    ],
+    "observations": [
+      {
+        "id": "mechanism",
+        "label": {
+          "en": "Inside an SM",
+          "tr": "SM’nin İçinde"
+        },
+        "explanation": {
+          "en": "Watch which warp is waiting and which can issue.",
+          "tr": "Hangi warp’ın beklediğini, hangisinin ilerleyebildiğini izle."
+        },
+        "evidenceRefs": ["conceptual-execution", "numerical-reference"]
+      }
+    ],
+    "assumptionRefs": ["conceptual-gpu", "cuda-scope"],
+    "evidenceRefs": ["conceptual-execution", "numerical-reference"],
+    "relatedTheory": [
+      {
+        "id": "gpu",
+        "label": {
+          "en": "Learn the theory · GPU Kernel Atlas",
+          "tr": "Kuramı öğren · GPU Kernel Atlas"
+        },
+        "url": "https://gpu.aserdargun.com/en",
+        "localizedUrls": {
+          "en": "https://gpu.aserdargun.com/en",
+          "tr": "https://gpu.aserdargun.com/tr"
+        }
+      }
+    ],
+    "relatedLabs": [
+      {
+        "id": "tfl",
+        "label": {
+          "en": "Explore serving · TFL",
+          "tr": "Sunumu keşfet · TFL"
+        },
+        "url": "https://tfl.aserdargun.com/"
+      }
+    ],
+    "config": {
+      "mode": "sm"
+    }
+  },
+  {
+    "schemaVersion": "0.1",
+    "id": "kernel",
+    "title": {
+      "en": "Kernel Launch",
+      "tr": "Kernel Başlatma"
+    },
+    "guidingQuestion": {
+      "en": "How do grid and block sizes change the distribution of kernel work?",
+      "tr": "Grid ve blok boyutları kernel işinin dağılımını nasıl değiştirir?"
+    },
+    "description": {
+      "en": "Follow C[i] = A[i] + B[i] from the host to a result. Every highlighted object has a job in this story.",
+      "tr": "C[i] = A[i] + B[i] işlemini ana işlemciden sonuca kadar izle. Vurgulanan her nesnenin bu akışta bir görevi var."
+    },
+    "concepts": ["concept:kernel-execution", "concept:simt"],
+    "learningObjectives": [
+      {
+        "en": "The launch describes the work. Scheduling, memory access and execution determine how that work progresses.",
+        "tr": "Başlatma, işi tanımlar. Zamanlama, bellek erişimi ve yürütme, işin nasıl ilerlediğini belirler."
+      }
+    ],
+    "controls": [
+      {
+        "id": "timeline",
+        "label": {
+          "en": "Execution events",
+          "tr": "Yürütme olayları"
+        },
+        "description": {
+          "en": "Step through the existing educational timeline.",
+          "tr": "Mevcut eğitim zaman çizelgesinde adımla."
+        }
+      }
+    ],
+    "observations": [
+      {
+        "id": "mechanism",
+        "label": {
+          "en": "Kernel Launch",
+          "tr": "Kernel Başlatma"
+        },
+        "explanation": {
+          "en": "Change the block size and count. Step to the final result.",
+          "tr": "Blok boyutunu ve sayısını değiştir. Sonuca kadar adımla."
+        },
+        "evidenceRefs": ["conceptual-execution", "numerical-reference"]
+      }
+    ],
+    "assumptionRefs": ["conceptual-gpu", "cuda-scope"],
+    "evidenceRefs": ["conceptual-execution", "numerical-reference"],
+    "relatedTheory": [
+      {
+        "id": "gpu",
+        "label": {
+          "en": "Learn the theory · GPU Kernel Atlas",
+          "tr": "Kuramı öğren · GPU Kernel Atlas"
+        },
+        "url": "https://gpu.aserdargun.com/en",
+        "localizedUrls": {
+          "en": "https://gpu.aserdargun.com/en",
+          "tr": "https://gpu.aserdargun.com/tr"
+        }
+      }
+    ],
+    "relatedLabs": [
+      {
+        "id": "tfl",
+        "label": {
+          "en": "Explore serving · TFL",
+          "tr": "Sunumu keşfet · TFL"
+        },
+        "url": "https://tfl.aserdargun.com/"
+      }
+    ],
+    "config": {
+      "mode": "kernel"
+    }
+  },
+  {
+    "schemaVersion": "0.1",
+    "id": "warp",
+    "title": {
+      "en": "Warp / SIMT",
+      "tr": "Warp / SIMT"
+    },
+    "guidingQuestion": {
+      "en": "What happens to active lanes when a warp takes different branches?",
+      "tr": "Bir warp farklı dalları izlediğinde etkin şeritlere ne olur?"
+    },
+    "description": {
+      "en": "Explore 32 logical lanes. Change the branch, step the masks, and select a lane to inspect its state.",
+      "tr": "32 mantıksal şeridi keşfet. Dallanmayı değiştir, maskeleri adımla ve durumunu incelemek için bir şerit seç."
+    },
+    "concepts": ["concept:simt", "concept:warp-divergence"],
+    "learningObjectives": [
+      {
+        "en": "Different control-flow paths within one warp can require separate masked execution. Inactive lanes remain present.",
+        "tr": "Bir warp’taki farklı kontrol akışları ayrı maskeli yürütmeler gerektirebilir. Etkin olmayan şeritler varlıklarını korur."
+      }
+    ],
+    "controls": [
+      {
+        "id": "timeline",
+        "label": {
+          "en": "Execution events",
+          "tr": "Yürütme olayları"
+        },
+        "description": {
+          "en": "Step through the existing educational timeline.",
+          "tr": "Mevcut eğitim zaman çizelgesinde adımla."
+        }
+      }
+    ],
+    "observations": [
+      {
+        "id": "mechanism",
+        "label": {
+          "en": "Warp / SIMT",
+          "tr": "Warp / SIMT"
+        },
+        "explanation": {
+          "en": "Compare uniform and alternating lane branches.",
+          "tr": "Tek tip ve dönüşümlü şerit dallanmalarını karşılaştır."
+        },
+        "evidenceRefs": ["conceptual-execution", "numerical-reference"]
+      }
+    ],
+    "assumptionRefs": ["conceptual-gpu", "cuda-scope"],
+    "evidenceRefs": ["conceptual-execution", "numerical-reference"],
+    "relatedTheory": [
+      {
+        "id": "gpu",
+        "label": {
+          "en": "Learn the theory · GPU Kernel Atlas",
+          "tr": "Kuramı öğren · GPU Kernel Atlas"
+        },
+        "url": "https://gpu.aserdargun.com/en",
+        "localizedUrls": {
+          "en": "https://gpu.aserdargun.com/en",
+          "tr": "https://gpu.aserdargun.com/tr"
+        }
+      }
+    ],
+    "relatedLabs": [
+      {
+        "id": "tfl",
+        "label": {
+          "en": "Explore serving · TFL",
+          "tr": "Sunumu keşfet · TFL"
+        },
+        "url": "https://tfl.aserdargun.com/"
+      }
+    ],
+    "config": {
+      "mode": "warp"
+    }
+  },
+  {
+    "schemaVersion": "0.1",
+    "id": "memory",
+    "title": {
+      "en": "Memory Journey",
+      "tr": "Bellek Yolculuğu"
+    },
+    "guidingQuestion": {
+      "en": "How does an address pattern change the groups of memory accesses?",
+      "tr": "Adres deseni bellek erişim gruplarını nasıl değiştirir?"
+    },
+    "description": {
+      "en": "The arithmetic is unchanged. Change where lanes read and watch the address groups spread apart.",
+      "tr": "Aritmetik aynı. Şeritlerin nereden okuduğunu değiştir ve adres gruplarının nasıl dağıldığını gör."
+    },
+    "concepts": ["concept:gpu-memory"],
+    "learningObjectives": [
+      {
+        "en": "Useful bytes and transferred bytes can differ. Locality and reuse help reduce unnecessary data movement.",
+        "tr": "Kullanılan baytlarla taşınan baytlar farklı olabilir. Yerellik ve yeniden kullanım gereksiz veri hareketini azaltabilir."
+      }
+    ],
+    "controls": [
+      {
+        "id": "timeline",
+        "label": {
+          "en": "Execution events",
+          "tr": "Yürütme olayları"
+        },
+        "description": {
+          "en": "Step through the existing educational timeline.",
+          "tr": "Mevcut eğitim zaman çizelgesinde adımla."
+        }
+      }
+    ],
+    "observations": [
+      {
+        "id": "mechanism",
+        "label": {
+          "en": "Memory Journey",
+          "tr": "Bellek Yolculuğu"
+        },
+        "explanation": {
+          "en": "Try strides 1, 2, 4 and 8, then inspect a lane.",
+          "tr": "1, 2, 4 ve 8 adımları dene, ardından bir şeridi incele."
+        },
+        "evidenceRefs": ["conceptual-execution", "numerical-reference"]
+      }
+    ],
+    "assumptionRefs": ["conceptual-gpu", "cuda-scope"],
+    "evidenceRefs": ["conceptual-execution", "numerical-reference"],
+    "relatedTheory": [
+      {
+        "id": "gpu",
+        "label": {
+          "en": "Learn the theory · GPU Kernel Atlas",
+          "tr": "Kuramı öğren · GPU Kernel Atlas"
+        },
+        "url": "https://gpu.aserdargun.com/en",
+        "localizedUrls": {
+          "en": "https://gpu.aserdargun.com/en",
+          "tr": "https://gpu.aserdargun.com/tr"
+        }
+      }
+    ],
+    "relatedLabs": [
+      {
+        "id": "tfl",
+        "label": {
+          "en": "Explore serving · TFL",
+          "tr": "Sunumu keşfet · TFL"
+        },
+        "url": "https://tfl.aserdargun.com/"
+      }
+    ],
+    "config": {
+      "mode": "memory"
+    }
+  },
+  {
+    "schemaVersion": "0.1",
+    "id": "tensor",
+    "title": {
+      "en": "Tensor / Tiled GEMM",
+      "tr": "Tensor / Döşemeli GEMM"
+    },
+    "guidingQuestion": {
+      "en": "How do matrix tiles accumulate an output cell?",
+      "tr": "Matris döşemeleri bir çıktı hücresinin toplamını nasıl oluşturur?"
+    },
+    "description": {
+      "en": "Follow one output tile of C = A × B. Accumulate contributions along K, then write the finished tile.",
+      "tr": "C = A × B işleminin bir çıktı döşemesini izle. K boyunca katkıları biriktir, ardından döşemeyi yaz."
+    },
+    "concepts": ["concept:tensor-compute", "concept:gpu-memory"],
+    "learningObjectives": [
+      {
+        "en": "Tiling exposes reusable working sets. Specialized matrix resources accelerate supported operations; they are not better general-purpose cores.",
+        "tr": "Döşemeleme, yeniden kullanılabilen çalışma kümeleri oluşturur. Özel matris kaynakları desteklenen işlemleri hızlandırır; daha iyi genel amaçlı çekirdekler değildir."
+      }
+    ],
+    "controls": [
+      {
+        "id": "timeline",
+        "label": {
+          "en": "Execution events",
+          "tr": "Yürütme olayları"
+        },
+        "description": {
+          "en": "Step through the existing educational timeline.",
+          "tr": "Mevcut eğitim zaman çizelgesinde adımla."
+        }
+      }
+    ],
+    "observations": [
+      {
+        "id": "mechanism",
+        "label": {
+          "en": "Tensor / Tiled GEMM",
+          "tr": "Tensor / Döşemeli GEMM"
+        },
+        "explanation": {
+          "en": "Change tile size. Compare the two compute paths and inspect C.",
+          "tr": "Döşeme boyutunu değiştir. İki hesaplama yolunu karşılaştır ve C’yi incele."
+        },
+        "evidenceRefs": ["conceptual-execution", "numerical-reference"]
+      }
+    ],
+    "assumptionRefs": ["conceptual-gpu", "cuda-scope"],
+    "evidenceRefs": ["conceptual-execution", "numerical-reference"],
+    "relatedTheory": [
+      {
+        "id": "gpu",
+        "label": {
+          "en": "Learn the theory · GPU Kernel Atlas",
+          "tr": "Kuramı öğren · GPU Kernel Atlas"
+        },
+        "url": "https://gpu.aserdargun.com/en",
+        "localizedUrls": {
+          "en": "https://gpu.aserdargun.com/en",
+          "tr": "https://gpu.aserdargun.com/tr"
+        }
+      }
+    ],
+    "relatedLabs": [
+      {
+        "id": "tfl",
+        "label": {
+          "en": "Explore serving · TFL",
+          "tr": "Sunumu keşfet · TFL"
+        },
+        "url": "https://tfl.aserdargun.com/"
+      }
+    ],
+    "config": {
+      "mode": "tensor"
+    }
+  }
+]

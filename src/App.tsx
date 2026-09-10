@@ -27,6 +27,9 @@ import { CodePanel } from "./components/CodePanel";
 import { Inspector, atlasUrl } from "./components/Inspector";
 import { TextView, MatrixTable, AddressTable } from "./components/TextView";
 
+import { LabShell, LearningContextNotice } from "@aserdargun/lab-ui";
+import { manifest, experiments } from "./ils/catalog";
+import { returnToServing, contextExplanation } from "./ils/context";
 const Scene = lazy(() => import("./scene/Scene"));
 class SceneBoundary extends Component<
   { children: ReactNode; fallback: ReactNode },
@@ -43,7 +46,8 @@ class SceneBoundary extends Component<
 
 export default function App() {
   const explorer = useExplorer(),
-    { state, patch, navigate, act } = explorer;
+    { state, patch, navigate, act, learningContext } = explorer;
+  const servingUrl = returnToServing(learningContext, state.mode, state.locale);
   const [ready, setReady] = useState(false),
     [contextLost, setContextLost] = useState(false),
     [copiedLink, setCopiedLink] = useState(""),
@@ -229,6 +233,19 @@ export default function App() {
             <ArrowRight size={18} />
           </button>
         </div>
+        {learningContext && (
+          <LearningContextNotice
+            source="TFL"
+            explanation={contextExplanation}
+            locale={state.locale}
+          >
+            <a href={servingUrl}>
+              {state.locale === "tr"
+                ? "Sunuma dön → TFL"
+                : "Return to serving → TFL"}
+            </a>
+          </LearningContextNotice>
+        )}
         <div className="workbench">
           <section
             className="viewport-column"
@@ -380,6 +397,14 @@ export default function App() {
         </div>
         <Playback {...explorer} />
         <CodePanel state={state} />
+        <LabShell
+          manifest={manifest}
+          experiment={experiments.find((x) => x.id === state.mode)!}
+          locale={state.locale}
+          relatedLabs={manifest.related.labs!.map((link) =>
+            link.id === "tfl" ? { ...link, url: servingUrl } : link,
+          )}
+        />
         <div className="statusbar">
           <span>
             {tr

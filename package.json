@@ -10,7 +10,7 @@
     "dev": "vite --host 127.0.0.1 --port 5296 --strictPort",
     "dev:codex": "node tools/preview.mjs start",
     "stop:local": "node tools/preview.mjs stop",
-    "build": "tsc -b && vite build && node tools/static-routes.mjs",
+    "build": "tsc -b && vite build && node tools/static-routes.mjs && node tools/ils-manifest.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4186 --strictPort",
     "test": "vitest run",
     "lint": "eslint src tools tests vite.config.ts",
@@ -28,7 +28,9 @@
     "lucide-react": "^0.468.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "three": "^0.182.0"
+    "three": "^0.182.0",
+    "@aserdargun/lab-core": "file:vendor/aserdargun-lab-core-0.1.0-e5cb8baabeebc68c.tgz",
+    "@aserdargun/lab-ui": "file:vendor/aserdargun-lab-ui-0.1.0-ad3719af737d3971.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

@@ -76,3 +76,13 @@ The kernel launch uses four teaching SMs with one block slot each, not a univers
 Numerical results are calculated, never presented as profiler measurements. The tests validate address grouping, complementary masks, launch waves, vector checksums, matrix products, tile partitioning, URL constraints and GLB structure. CUDA downloads require NVIDIA hardware and a CUDA Toolkit; they have not been compiled or run on this Mac.
 
 Occupancy, architecture lenses, LLM inference and multi-GPU are future curriculum phases, deliberately outside the six-experience MVP.
+
+## ILS v0.1 pilot
+
+`lab.manifest.json` describes the actual lab, capabilities, concepts, evidence and assumptions. `src/ils/experiments.json` maps existing experiments; `src/ils/catalog.ts` adapts the existing guided lesson without copying its curriculum. Shared provenance, related learning, context notices and accessible transport buttons come from the canonical `@aserdargun/lab-core` and `@aserdargun/lab-ui` packages maintained in `ils-aserdargun`.
+
+Both packages are consumed through committed, content-addressed `vendor/*.tgz` archives and npm lockfile integrity, with provenance in `vendor/ils-provenance.json`. CI needs no sibling checkout, symlink or registry credentials. Update them only by building/packing canonical ILS and running its pilot installer, then run this repository's normal validation. Never edit installed package files. Ahead-of-time JSON Schema validators work without runtime code generation.
+
+TFL prefill links open the existing tensor scene; decode links open memory. A validated 1 KB maximum educational context produces a localized origin notice and a return link to a paused TFL checkpoint. Batch/sequence classes describe the source without inventing a GPU workload. Existing routes, numerical model, 3D scenes and playback remain app-owned. Invalid context is ignored. The published manifest artifact path is `/gex/lab.manifest.json`.
+
+Manifest status `preview` describes this ILS pilot; local validation does not mean these changes were deployed. Canonical ILS documents include the migration guide, compatibility checklist, protocol, architecture review and cross-lab browser acceptance test.

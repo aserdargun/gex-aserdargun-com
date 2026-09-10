@@ -1,0 +1,121 @@
+[
+  {
+    "id": "concept:gpu-anatomy",
+    "label": {
+      "en": "GPU anatomy",
+      "tr": "GPU anatomisi"
+    }
+  },
+  {
+    "id": "concept:gpu-memory",
+    "label": {
+      "en": "GPU memory",
+      "tr": "GPU belleği"
+    }
+  },
+  {
+    "id": "concept:sm",
+    "label": {
+      "en": "Streaming multiprocessor",
+      "tr": "Akış çoklu işlemcisi"
+    }
+  },
+  {
+    "id": "concept:simt",
+    "label": {
+      "en": "SIMT",
+      "tr": "SIMT"
+    }
+  },
+  {
+    "id": "concept:kernel-execution",
+    "label": {
+      "en": "Kernel execution",
+      "tr": "Kernel yürütmesi"
+    }
+  },
+  {
+    "id": "concept:warp-divergence",
+    "label": {
+      "en": "Warp divergence",
+      "tr": "Warp dallanması"
+    }
+  },
+  {
+    "id": "concept:tensor-compute",
+    "label": {
+      "en": "Tiled matrix computation",
+      "tr": "Döşemeli matris hesaplama"
+    }
+  },
+  {
+    "id": "concept:prefill",
+    "label": {
+      "en": "Prefill",
+      "tr": "Ön doldurma"
+    }
+  },
+  {
+    "id": "concept:decode",
+    "label": {
+      "en": "Decode",
+      "tr": "Çözümleme"
+    }
+  },
+  {
+    "id": "concept:ttft",
+    "label": {
+      "en": "Time to first token",
+      "tr": "İlk tokena kadar süre"
+    }
+  },
+  {
+    "id": "concept:concurrency",
+    "label": {
+      "en": "Concurrent requests",
+      "tr": "Eşzamanlı istekler"
+    }
+  },
+  {
+    "id": "concept:scheduling",
+    "label": {
+      "en": "Scheduling",
+      "tr": "Zamanlama"
+    }
+  },
+  {
+    "id": "concept:context-window",
+    "label": {
+      "en": "Context window",
+      "tr": "Bağlam penceresi"
+    }
+  },
+  {
+    "id": "concept:kv-cache",
+    "label": {
+      "en": "KV cache",
+      "tr": "KV önbellek"
+    }
+  },
+  {
+    "id": "concept:prompt",
+    "label": {
+      "en": "Prompt",
+      "tr": "İstem"
+    }
+  },
+  {
+    "id": "concept:tokenization",
+    "label": {
+      "en": "Tokenization",
+      "tr": "Tokenlaştırma"
+    }
+  },
+  {
+    "id": "concept:streaming",
+    "label": {
+      "en": "Token streaming",
+      "tr": "Token iletimi"
+    }
+  }
+]

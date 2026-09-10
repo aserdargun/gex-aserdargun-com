@@ -1,0 +1,196 @@
+{
+  "schemaVersion": "0.1",
+  "id": "gex",
+  "code": "gex",
+  "name": "GPU Execution Explorer",
+  "canonicalUrl": "https://gex.aserdargun.com/gex/",
+  "type": "interactive-lab",
+  "parentApp": "gpu",
+  "status": "preview",
+  "tagline": {
+    "en": "See how a kernel becomes hardware execution.",
+    "tr": "Bir kernelin donanımda nasıl yürütüldüğünü gör."
+  },
+  "guidingQuestion": {
+    "en": "How does a kernel become GPU execution?",
+    "tr": "Bir kernel GPU yürütmesine nasıl dönüşür?"
+  },
+  "concepts": [
+    "concept:gpu-anatomy",
+    "concept:gpu-memory",
+    "concept:kernel-execution",
+    "concept:simt",
+    "concept:sm",
+    "concept:tensor-compute",
+    "concept:warp-divergence"
+  ],
+  "capabilities": {
+    "play": true,
+    "pause": true,
+    "step": true,
+    "reset": true,
+    "rewind": true,
+    "compare": false,
+    "guidedLesson": true,
+    "experiments": true,
+    "assumptions": true,
+    "evidence": true
+  },
+  "experiments": [
+    {
+      "id": "anatomy",
+      "title": {
+        "en": "GPU Anatomy",
+        "tr": "GPU Anatomisi"
+      },
+      "route": "/gex/anatomy"
+    },
+    {
+      "id": "sm",
+      "title": {
+        "en": "Inside an SM",
+        "tr": "SM’nin İçinde"
+      },
+      "route": "/gex/sm"
+    },
+    {
+      "id": "kernel",
+      "title": {
+        "en": "Kernel Launch",
+        "tr": "Kernel Başlatma"
+      },
+      "route": "/gex/kernel"
+    },
+    {
+      "id": "warp",
+      "title": {
+        "en": "Warp / SIMT",
+        "tr": "Warp / SIMT"
+      },
+      "route": "/gex/warp"
+    },
+    {
+      "id": "memory",
+      "title": {
+        "en": "Memory Journey",
+        "tr": "Bellek Yolculuğu"
+      },
+      "route": "/gex/memory"
+    },
+    {
+      "id": "tensor",
+      "title": {
+        "en": "Tensor / Tiled GEMM",
+        "tr": "Tensor / Döşemeli GEMM"
+      },
+      "route": "/gex/tensor"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "follow-a-kernel",
+      "title": {
+        "en": "Follow a kernel",
+        "tr": "Bir kerneli izle"
+      },
+      "route": "/gex/kernel"
+    }
+  ],
+  "evidencePolicy": {
+    "summary": {
+      "en": "Inspect assumptions and provenance before interpreting these educational results. No hardware measurements are provided.",
+      "tr": "Bu eğitim sonuçlarını yorumlamadan önce varsayımları ve veri kökenini incele. Donanım ölçümü sunulmaz."
+    },
+    "allowedKinds": [
+      "simulated",
+      "calculated"
+    ]
+  },
+  "assumptions": [
+    {
+      "id": "conceptual-gpu",
+      "title": {
+        "en": "Conceptual GPU and SM",
+        "tr": "Kavramsal GPU ve SM"
+      },
+      "description": {
+        "en": "Educational geometry and resource counts, not a literal die floorplan or cycle-accurate hardware model.",
+        "tr": "Eğitim amaçlı geometri ve kaynak sayılarıdır; fiziksel yonga yerleşimi veya çevrim doğruluğunda donanım modeli değildir."
+      }
+    },
+    {
+      "id": "cuda-scope",
+      "title": {
+        "en": "Architecture scope",
+        "tr": "Mimari kapsam"
+      },
+      "description": {
+        "en": "32-lane warp and SIMT examples use NVIDIA/CUDA concepts. Teaching SM capacity, 32-byte address groups and 2/4 matrix tiles are not universal hardware specifications.",
+        "tr": "32 şeritli warp ve SIMT örnekleri NVIDIA/CUDA kavramlarını kullanır. Eğitim SM kapasitesi, 32 baytlık adres grupları ve 2/4 matris döşemeleri evrensel donanım özellikleri değildir."
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "schemaVersion": "0.1",
+      "id": "conceptual-execution",
+      "kind": "simulated",
+      "verificationStatus": "not-applicable",
+      "label": {
+        "en": "Conceptual execution",
+        "tr": "Kavramsal yürütme"
+      },
+      "notes": {
+        "en": "Events illustrate a mechanism; no CUDA workload or profiler runs.",
+        "tr": "Olaylar bir mekanizmayı açıklar; CUDA iş yükü veya profiler çalışmaz."
+      },
+      "assumptionRefs": [
+        "conceptual-gpu",
+        "cuda-scope"
+      ]
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "numerical-reference",
+      "kind": "calculated",
+      "verificationStatus": "not-applicable",
+      "label": {
+        "en": "Numerical reference",
+        "tr": "Sayısal referans"
+      },
+      "notes": {
+        "en": "Address groups, masks and matrix sums are calculated by the educational model. They are not hardware measurements.",
+        "tr": "Adres grupları, maskeler ve matris toplamları eğitim modeliyle hesaplanır. Donanım ölçümü değildir."
+      },
+      "assumptionRefs": [
+        "cuda-scope"
+      ]
+    }
+  ],
+  "related": {
+    "theory": [
+      {
+        "id": "gpu",
+        "label": {
+          "en": "Learn the theory · GPU Kernel Atlas",
+          "tr": "Kuramı öğren · GPU Kernel Atlas"
+        },
+        "url": "https://gpu.aserdargun.com/en",
+        "localizedUrls": {
+          "en": "https://gpu.aserdargun.com/en",
+          "tr": "https://gpu.aserdargun.com/tr"
+        }
+      }
+    ],
+    "labs": [
+      {
+        "id": "tfl",
+        "label": {
+          "en": "Explore serving · TFL",
+          "tr": "Sunumu keşfet · TFL"
+        },
+        "url": "https://tfl.aserdargun.com/"
+      }
+    ]
+  }
+}
