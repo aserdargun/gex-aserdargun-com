@@ -1,7 +1,16 @@
-import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  type ReactNode,
+} from "react";
 import { Html, Instances, Instance } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+
+export const SceneLabels = createContext(true);
 
 export const palette = {
   compute: "#eab785",
@@ -61,6 +70,8 @@ export function Label({
   tone?: string;
   onClick?: () => void;
 }) {
+  const visible = useContext(SceneLabels);
+  if (!visible) return null;
   return (
     <Html position={position} center zIndexRange={[8, 0]}>
       <button

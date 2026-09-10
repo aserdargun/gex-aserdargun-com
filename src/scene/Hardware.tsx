@@ -3,6 +3,7 @@ import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import type { ComponentId, ExplorerState } from "../data/types";
 import { components } from "../data/components";
+import contract from "../data/model-contract.json";
 import { Label, Packet, Part, palette, type Point } from "./primitives";
 
 function identify(obj: THREE.Object3D): ComponentId | null {
@@ -39,7 +40,9 @@ export function Hardware({
   state: ExplorerState;
   onSelect: (id: ComponentId) => void;
 }) {
-  const gltf = useGLTF(`${import.meta.env.BASE_URL}models/gex-${kind}.glb`);
+  const gltf = useGLTF(
+    `${import.meta.env.BASE_URL}models/gex-${kind}.glb?v=${contract.versions.world}`,
+  );
   const scene = useMemo(() => {
     const model = gltf.scene.clone(true);
     model.traverse((object) => {
@@ -140,7 +143,7 @@ export function Hardware({
               }
             />
           ))}
-          {state.step > 0 && (
+          {[1, 3, 4].includes(state.step) && (
             <Packet
               from={state.step === 3 ? [-0.85, 1, -3.5] : [-2.5, 1, -3.5]}
               to={state.step === 1 ? [3.6, 1, 0.5] : [-2.1, 1, 0.4]}

@@ -47,22 +47,23 @@ export function Warp({
     <group name="GEX_WARP_00">
       <Part position={[0, -0.05, 0]} size={[9.5, 0.18, 5]} color="#263236" />
       <Cubes items={items} size={[0.77, 0.3, 0.77]} onSelect={onSelect} />
-      {items.map(({ id, position }) => (
-        <Html
-          key={id}
-          position={[position[0], 0.7, position[2]]}
-          center
-          zIndexRange={[7, 0]}
-        >
-          <button
-            className={`lane-label ${mask[id] && !waiting ? "active" : ""} ${state.selectedLane === id ? "selected" : ""}`}
-            aria-label={`${state.locale === "en" ? "Inspect lane" : "Şeridi incele"} ${id}`}
-            onClick={() => onSelect(id)}
+      {state.labels &&
+        items.map(({ id, position }) => (
+          <Html
+            key={id}
+            position={[position[0], 0.7, position[2]]}
+            center
+            zIndexRange={[7, 0]}
           >
-            {id.toString().padStart(2, "0")}
-          </button>
-        </Html>
-      ))}
+            <button
+              className={`lane-label ${mask[id] && !waiting ? "active" : ""} ${state.selectedLane === id ? "selected" : ""}`}
+              aria-label={`${state.locale === "en" ? "Inspect lane" : "Şeridi incele"} ${id}`}
+              onClick={() => onSelect(id)}
+            >
+              {id.toString().padStart(2, "0")}
+            </button>
+          </Html>
+        ))}
       {state.labels && (
         <Label position={[0, 0.6, -3.15]} tone="compute">
           {asKernel

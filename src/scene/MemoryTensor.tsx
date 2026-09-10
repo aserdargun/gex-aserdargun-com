@@ -18,7 +18,10 @@ export function Memory({
   state: ExplorerState;
   onSelect: (n: number) => void;
 }) {
-  const access = memoryAccess(state.pattern, state.stride);
+  const access = useMemo(
+    () => memoryAccess(state.pattern, state.stride),
+    [state.pattern, state.stride],
+  );
   const lanePos = (id: number): Point => [
     ((id % 16) - 7.5) * 0.55,
     0.3,
@@ -97,8 +100,8 @@ export function Memory({
               : "ADRES GRUBUNA ERİŞİLDİ"}
           </Label>
           <Label position={[lanePos(state.selectedLane)[0], 1, 1.2]}>
-            lane {state.selectedLane} → A[{access.addresses[state.selectedLane]}
-            ]
+            {state.locale === "tr" ? "şerit" : "lane"} {state.selectedLane} → A[
+            {access.addresses[state.selectedLane]}]
           </Label>
         </>
       )}
@@ -114,7 +117,7 @@ export function Memory({
             color={
               state.step === 1 && index === 0
                 ? palette.memory
-                : state.step === 2 && cold
+                : state.step === 2 && (cold ? index !== 0 : index === 0)
                   ? palette.memory
                   : palette.muted
             }

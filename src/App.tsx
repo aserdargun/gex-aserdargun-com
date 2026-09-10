@@ -4,6 +4,7 @@ import {
   lazy,
   useState,
   useCallback,
+  useEffect,
   type ReactNode,
 } from "react";
 import {
@@ -20,7 +21,7 @@ import {
 } from "lucide-react";
 import { lessons, modes } from "./data/lessons";
 import { useExplorer } from "./lib/useExplorer";
-import { stateUrl } from "./lib/state";
+import { stepForState } from "./lib/presentation";
 import type { ComponentId, Mode } from "./data/types";
 import { Playback, ExperimentControls } from "./components/Controls";
 import { CodePanel } from "./components/CodePanel";
@@ -32,12 +33,15 @@ import { manifest, experiments } from "./ils/catalog";
 import { returnToServing, contextExplanation } from "./ils/context";
 const Scene = lazy(() => import("./scene/Scene"));
 class SceneBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
+  { children: ReactNode; fallback: ReactNode; onError: () => void },
   { failed: boolean }
 > {
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
+  }
+  componentDidCatch() {
+    this.props.onError();
   }
   render() {
     return this.state.failed ? this.props.fallback : this.props.children;
@@ -46,15 +50,15 @@ class SceneBoundary extends Component<
 
 export default function App() {
   const explorer = useExplorer(),
-    { state, patch, navigate, act, learningContext } = explorer;
+    { state, patch, navigate, act, learningContext, experimentLink } = explorer;
   const servingUrl = returnToServing(learningContext, state.mode, state.locale);
-  const [ready, setReady] = useState(false),
+  const [sceneStatus, setSceneStatus] = useState("loading"),
     [contextLost, setContextLost] = useState(false),
     [copiedLink, setCopiedLink] = useState(""),
     [shareError, setShareError] = useState(false);
   const tr = state.locale === "tr",
     lesson = lessons[state.mode];
-  const experimentLink = new URL(stateUrl(state), window.location.origin).href;
+  const step = stepForState(state);
   const linkCopied = copiedLink === experimentLink;
   const onComponent = useCallback(
     (id: ComponentId) => patch({ selectedComponent: id }),
@@ -68,9 +72,15 @@ export default function App() {
     (id: number) => patch({ selectedCell: id }),
     [patch],
   );
-  const onReady = useCallback(() => setReady(true), []);
+  const onReady = useCallback(() => setSceneStatus("ready"), []);
+  const onLoading = useCallback(() => setSceneStatus("loading"), []);
+  const onSceneError = useCallback(() => {
+    setSceneStatus("unavailable");
+    patch({ playing: false });
+  }, [patch]);
   const onContextLost = useCallback(() => {
     setContextLost(true);
+    setSceneStatus("unavailable");
     patch({ playing: false });
   }, [patch]);
   const fallback = (
@@ -80,6 +90,12 @@ export default function App() {
           ? "3B görünüm kullanılamıyor. Etkileşimli metin görünümüyle devam edebilirsin."
           : "3D is unavailable. Continue with the interactive text view."}
       </p>
+      <button
+        className="text-link retry-scene"
+        onClick={() => window.location.reload()}
+      >
+        {tr ? "3B görünümü yeniden yükle" : "Reload the 3D view"}
+      </button>
       <TextView state={state} patch={patch} />
     </div>
   );
@@ -102,10 +118,18 @@ export default function App() {
           className="brand"
           href={`/gex/anatomy?lang=${state.locale}`}
           onClick={(e) => {
-            e.preventDefault();
-            navigate("anatomy");
+            if (
+              e.button === 0 &&
+              !e.metaKey &&
+              !e.ctrlKey &&
+              !e.shiftKey &&
+              !e.altKey
+            ) {
+              e.preventDefault();
+              navigate("anatomy");
+            }
           }}
-          aria-label="GEX home"
+          aria-label={tr ? "GEX ana sayfa" : "GEX home"}
         >
           <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" />
           <b>GEX</b>
@@ -145,7 +169,13 @@ export default function App() {
               className={state.mode === mode ? "active" : ""}
               aria-current={state.mode === mode ? "page" : undefined}
               onClick={(e) => {
-                if (!e.metaKey && !e.ctrlKey) {
+                if (
+                  e.button === 0 &&
+                  !e.metaKey &&
+                  !e.ctrlKey &&
+                  !e.shiftKey &&
+                  !e.altKey
+                ) {
                   e.preventDefault();
                   navigate(mode);
                 }
@@ -273,7 +303,7 @@ export default function App() {
                           : "SIMT"}
                 </span>
                 <span>/</span>
-                <b>{lesson.steps[state.step].label[state.locale]}</b>
+                <b>{step.label[state.locale]}</b>
               </div>
               <div className="viewport-tools">
                 <button
@@ -296,6 +326,7 @@ export default function App() {
                 </button>
                 <button
                   className="tool-button reset-view"
+                  aria-label={tr ? "Görünümü sıfırla" : "Reset view"}
                   onClick={() => patch({ viewReset: state.viewReset + 1 })}
                 >
                   <RotateCcw size={14} />
@@ -307,9 +338,13 @@ export default function App() {
               className={`viewport ${state.textView ? "text-mode" : ""}`}
               tabIndex={0}
               aria-label={
-                tr
-                  ? "3B sahne. Sağ ve sol oklarla adımla."
-                  : "3D scene. Use right and left arrows to step."
+                state.textView || sceneStatus === "unavailable"
+                  ? tr
+                    ? "Etkileşimli metin görünümü. Sağ ve sol oklarla adımla."
+                    : "Interactive text view. Use right and left arrows to step."
+                  : tr
+                    ? "3B sahne. Sağ ve sol oklarla adımla."
+                    : "3D scene. Use right and left arrows to step."
               }
               onKeyDown={(e) => {
                 if (e.target !== e.currentTarget) return;
@@ -328,23 +363,14 @@ export default function App() {
               ) : contextLost ? (
                 fallback
               ) : (
-                <SceneBoundary fallback={fallback}>
+                <SceneBoundary fallback={fallback} onError={onSceneError}>
                   <Suspense
                     fallback={
-                      <div className="loading-scene" role="status">
-                        <Box size={32} />
-                        <span>
-                          {tr
-                            ? "3B çalışma alanı yükleniyor…"
-                            : "Loading the 3D workbench…"}
-                        </span>
-                        <button
-                          className="text-link"
-                          onClick={() => patch({ textView: true })}
-                        >
-                          {tr ? "Metin görünümünü aç" : "Open text view"}
-                        </button>
-                      </div>
+                      <SceneLoading
+                        tr={tr}
+                        onLoading={onLoading}
+                        onText={() => patch({ textView: true })}
+                      />
                     }
                   >
                     <Scene
@@ -352,6 +378,7 @@ export default function App() {
                       onComponent={onComponent}
                       onLane={onLane}
                       onCell={onCell}
+                      onLoading={onLoading}
                       onReady={onReady}
                       onContextLost={onContextLost}
                     />
@@ -375,7 +402,7 @@ export default function App() {
                 </span>
               </div>
               <span>
-                {state.textView
+                {state.textView || sceneStatus === "unavailable"
                   ? tr
                     ? "Klavye ile keşfet"
                     : "Explore with a keyboard"
@@ -491,9 +518,32 @@ export default function App() {
           )}
         </details>
         <span className="sr-only" data-testid="scene-status">
-          {ready ? "3D ready" : "3D loading"}
+          {state.textView ? "Text view" : `3D ${sceneStatus}`}
         </span>
       </main>
+    </div>
+  );
+}
+
+function SceneLoading({
+  tr,
+  onLoading,
+  onText,
+}: {
+  tr: boolean;
+  onLoading: () => void;
+  onText: () => void;
+}) {
+  useEffect(onLoading, [onLoading]);
+  return (
+    <div className="loading-scene" role="status">
+      <Box size={32} />
+      <span>
+        {tr ? "3B çalışma alanı yükleniyor…" : "Loading the 3D workbench…"}
+      </span>
+      <button className="text-link" onClick={onText}>
+        {tr ? "Metin görünümünü aç" : "Open text view"}
+      </button>
     </div>
   );
 }

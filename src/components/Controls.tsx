@@ -1,13 +1,14 @@
 import { LabControlButton } from "@aserdargun/lab-ui";
-import { manifest, guidedLesson } from "../ils/catalog";
+import { manifest } from "../ils/catalog";
 import { Play, Pause, SkipForward, RotateCcw, ChevronLeft } from "lucide-react";
 import { lessons } from "../data/lessons";
+import { stepForState } from "../lib/presentation";
 import type { Explorer } from "../lib/useExplorer";
 
 export function Playback({ state, act, patch }: Explorer) {
   const lesson = lessons[state.mode],
     tr = state.locale === "tr";
-  const all = lesson.steps;
+  const all = lesson.steps.map((_, step) => stepForState({ ...state, step }));
   const visible =
     all.length > 7 ? [0, 1, 2, 4, 7, 11, 14] : all.map((_, i) => i);
   const currentGroup = visible.filter((i) => i <= state.step).at(-1);
@@ -102,11 +103,7 @@ export function Playback({ state, act, patch }: Explorer) {
             <button
               onClick={() => act({ type: "step", value: i })}
               aria-current={currentGroup === i ? "step" : undefined}
-              title={
-                state.mode === "kernel"
-                  ? guidedLesson.steps[i].title[state.locale]
-                  : undefined
-              }
+              title={all[i].title[state.locale]}
             >
               <i aria-hidden="true" />
               <span>{all[i].label[state.locale]}</span>

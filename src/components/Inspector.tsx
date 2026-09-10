@@ -194,7 +194,7 @@ export function Inspector(explorer: Explorer) {
                   </div>
                   <div>
                     <dt>{tr ? "İstenen veri" : "Requested data"}</dt>
-                    <dd>128 B</dd>
+                    <dd>{mem.usefulBytes} B</dd>
                   </div>
                   <div>
                     <dt>{tr ? "Grup kapsamı" : "Group coverage"}</dt>
@@ -202,7 +202,7 @@ export function Inspector(explorer: Explorer) {
                   </div>
                 </dl>
                 <div className="math-readout">
-                  lane {state.selectedLane} → A[
+                  {tr ? "şerit" : "lane"} {state.selectedLane} → A[
                   {mem.addresses[state.selectedLane]}]<br />
                   {tr ? "Grup" : "Group"}{" "}
                   {Math.floor(mem.addresses[state.selectedLane] / 8)}

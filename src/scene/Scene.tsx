@@ -1,24 +1,32 @@
 import { Suspense, useEffect, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { Html, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import type { OrbitControls as Controls } from "three-stdlib";
 import type { ComponentId, ExplorerState } from "../data/types";
 import { Hardware } from "./Hardware";
 import { Kernel, Warp } from "./Execution";
 import { Memory, Tensor } from "./MemoryTensor";
-import { Floor, type Point } from "./primitives";
+import { Floor, SceneLabels, type Point } from "./primitives";
 
 function SceneLifecycle({
   onReady,
   onContextLost,
+  locale,
 }: {
+  locale: string;
   onReady: () => void;
   onContextLost: () => void;
 }) {
   const gl = useThree((s) => s.gl);
   useEffect(() => {
     const canvas = gl.domElement;
+    canvas.setAttribute(
+      "aria-label",
+      locale === "tr"
+        ? "GEX etkileşimli 3B eğitim görünümü"
+        : "GEX interactive educational 3D viewport",
+    );
     const lost = (event: Event) => {
       event.preventDefault();
       onContextLost();
@@ -26,7 +34,7 @@ function SceneLifecycle({
     canvas.addEventListener("webglcontextlost", lost);
     onReady();
     return () => canvas.removeEventListener("webglcontextlost", lost);
-  }, [gl, onReady, onContextLost]);
+  }, [gl, onReady, onContextLost, locale]);
   return null;
 }
 
@@ -156,12 +164,14 @@ export default function Scene({
   onLane,
   onCell,
   onReady,
+  onLoading,
   onContextLost,
 }: {
   state: ExplorerState;
   onComponent: (id: ComponentId) => void;
   onLane: (id: number) => void;
   onCell: (id: number) => void;
+  onLoading: () => void;
   onReady: () => void;
   onContextLost: () => void;
 }) {
@@ -177,7 +187,9 @@ export default function Scene({
         gl.setClearColor("#192326");
         gl.domElement.setAttribute(
           "aria-label",
-          "GEX interactive educational 3D viewport",
+          state.locale === "tr"
+            ? "GEX etkileşimli 3B eğitim görünümü"
+            : "GEX interactive educational 3D viewport",
         );
       }}
     >
@@ -197,24 +209,60 @@ export default function Scene({
         shadow-bias={-0.001}
       />
       <directionalLight position={[8, 6, -8]} intensity={1.6} color="#bdd2ca" />
-      <Suspense fallback={null}>
-        <SceneLifecycle onReady={onReady} onContextLost={onContextLost} />
-        {state.mode === "anatomy" &&
-          (state.step === 4 ? (
-            <Warp state={state} onSelect={onLane} asKernel />
-          ) : (
-            <Hardware kind="gpu" state={state} onSelect={onComponent} />
-          ))}
-        {state.mode === "sm" && (
-          <Hardware kind="sm" state={state} onSelect={onComponent} />
-        )}
-        {state.mode === "kernel" && <Kernel state={state} onSelect={onLane} />}
-        {state.mode === "warp" && <Warp state={state} onSelect={onLane} />}
-        {state.mode === "memory" && <Memory state={state} onSelect={onLane} />}
-        {state.mode === "tensor" && <Tensor state={state} onSelect={onCell} />}
-      </Suspense>
+      <SceneLabels.Provider value={state.labels}>
+        <Suspense
+          fallback={
+            <AssetLoading locale={state.locale} onLoading={onLoading} />
+          }
+        >
+          <SceneLifecycle
+            key={`${state.mode}:${state.mode === "anatomy" && state.step === 4 ? "warp" : "model"}`}
+            locale={state.locale}
+            onReady={onReady}
+            onContextLost={onContextLost}
+          />
+          {state.mode === "anatomy" &&
+            (state.step === 4 ? (
+              <Warp state={state} onSelect={onLane} asKernel />
+            ) : (
+              <Hardware kind="gpu" state={state} onSelect={onComponent} />
+            ))}
+          {state.mode === "sm" && (
+            <Hardware kind="sm" state={state} onSelect={onComponent} />
+          )}
+          {state.mode === "kernel" && (
+            <Kernel state={state} onSelect={onLane} />
+          )}
+          {state.mode === "warp" && <Warp state={state} onSelect={onLane} />}
+          {state.mode === "memory" && (
+            <Memory state={state} onSelect={onLane} />
+          )}
+          {state.mode === "tensor" && (
+            <Tensor state={state} onSelect={onCell} />
+          )}
+        </Suspense>
+      </SceneLabels.Provider>
       <Floor />
       <Camera state={state} />
     </Canvas>
+  );
+}
+
+function AssetLoading({
+  locale,
+  onLoading,
+}: {
+  locale: string;
+  onLoading: () => void;
+}) {
+  useEffect(onLoading, [onLoading]);
+  return (
+    <Html center>
+      <div className="asset-loading" role="status">
+        {locale === "tr"
+          ? "Donanım modeli yükleniyor…"
+          : "Loading the hardware model…"}
+      </div>
+    </Html>
   );
 }

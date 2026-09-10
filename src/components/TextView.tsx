@@ -1,5 +1,5 @@
 import { components, anatomyParts, smParts } from "../data/components";
-import { lessons } from "../data/lessons";
+import { stepForState } from "../lib/presentation";
 import {
   laneMask,
   memoryAccess,
@@ -12,7 +12,8 @@ import type { Explorer } from "../lib/useExplorer";
 
 export function TextView({ state, patch }: Pick<Explorer, "state" | "patch">) {
   const tr = state.locale === "tr",
-    lesson = lessons[state.mode];
+    step = stepForState(state);
+  const waiting = state.mode === "kernel" && [8, 9].includes(state.step);
   const mask =
     state.mode === "warp"
       ? laneMask(state.branch, state.step)
@@ -22,8 +23,8 @@ export function TextView({ state, patch }: Pick<Explorer, "state" | "patch">) {
       <div className="small-heading">
         {tr ? "ETKİLEŞİMLİ METİN GÖRÜNÜMÜ" : "INTERACTIVE TEXT VIEW"}
       </div>
-      <h3>{lesson.steps[state.step].title[state.locale]}</h3>
-      <p>{lesson.steps[state.step].body[state.locale]}</p>
+      <h3>{step.title[state.locale]}</h3>
+      <p>{step.body[state.locale]}</p>
       {state.mode === "anatomy" || state.mode === "sm" ? (
         <div className="component-list">
           {(state.mode === "sm" ? smParts : anatomyParts).map((id) => (
@@ -49,18 +50,22 @@ export function TextView({ state, patch }: Pick<Explorer, "state" | "patch">) {
               <button
                 key={id}
                 aria-pressed={state.selectedLane === id}
-                className={mask[id] ? "active" : ""}
+                className={mask[id] && !waiting ? "active" : ""}
                 onClick={() => patch({ selectedLane: id })}
               >
                 <strong>{id.toString().padStart(2, "0")}</strong>
                 <small>
-                  {mask[id]
+                  {waiting
                     ? tr
-                      ? "etkin"
-                      : "active"
-                    : tr
-                      ? "maskeli"
-                      : "masked"}
+                      ? "bekliyor"
+                      : "waiting"
+                    : mask[id]
+                      ? tr
+                        ? "etkin"
+                        : "active"
+                      : tr
+                        ? "maskeli"
+                        : "masked"}
                 </small>
               </button>
             ))}
@@ -117,7 +122,8 @@ export function MatrixTable({
   reference = false,
 }: Pick<Explorer, "state" | "patch"> & { reference?: boolean }) {
   const tr = state.locale === "tr";
-  const result = matrixResult(state.step === 4 ? state.tileSize : 8),
+  const fullResult = matrixResult();
+  const result = state.step === 4 ? matrixResult(state.tileSize) : fullResult,
     cells = tileCells(state.selectedCell, state.tileSize);
   return (
     <div className="matrix-reference">
@@ -134,7 +140,7 @@ export function MatrixTable({
             className="table-scroll"
             key={name}
             tabIndex={0}
-            aria-label={`${name} matrix`}
+            aria-label={tr ? `${name} matrisi` : `${name} matrix`}
           >
             <table>
               <caption>{name} · 8 × 8</caption>
@@ -149,7 +155,7 @@ export function MatrixTable({
                             : name === "B"
                               ? matrixB[id]
                               : reference
-                                ? matrixResult()[id]
+                                ? fullResult[id]
                                 : state.step >= 4 && cells.includes(id)
                                   ? result[id]
                                   : "—";

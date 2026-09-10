@@ -1890,6 +1890,71 @@ select option {
 
 /* ILS participates in the existing mobile lesson order. */
 @media (max-width: 800px) {
-  .main > .ils-context { order: 2; }
-  .main > .ils-shell { order: 7; }
+  .main > .ils-context {
+    order: 2;
+  }
+  .main > .ils-shell {
+    order: 7;
+  }
+}
+
+/* Keep lesson controls readable and available at every breakpoint. */
+.previous {
+  display: flex;
+}
+.retry-scene {
+  margin: 8px 20px;
+}
+.asset-loading {
+  padding: 14px 18px;
+  background: var(--bg);
+  color: var(--sage);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  white-space: nowrap;
+  font-size: 13px;
+}
+@media (max-width: 1250px) and (min-width: 801px) {
+  .playback {
+    flex-wrap: wrap;
+  }
+  .event-select {
+    display: flex;
+    margin-left: auto;
+  }
+  .timeline {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
+@media (max-width: 800px) {
+  .tool-button,
+  .tiny-button {
+    min-width: 36px;
+    min-height: 36px;
+  }
+  .timeline {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding: 5px 2px 12px;
+  }
+  .timeline li {
+    min-width: 66px;
+  }
+  .timeline button {
+    font-size: 10px;
+    min-height: 44px;
+  }
+}
+@media (max-width: 500px) {
+  .accessible-lanes {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .accessible-lanes small {
+    font-size: 10px;
+  }
+  .accessible-lanes button {
+    min-height: 52px;
+  }
 }

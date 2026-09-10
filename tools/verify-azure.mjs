@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
@@ -9,6 +10,58 @@ const config = JSON.parse(
 const release = JSON.parse(
   await readFile(new URL("release.json", output), "utf8"),
 );
+assert.deepEqual(
+  config,
+  JSON.parse(
+    await readFile(
+      new URL("../staticwebapp.config.json", import.meta.url),
+      "utf8",
+    ),
+  ),
+  "Azure route/config drift",
+);
+const contract = JSON.parse(
+  await readFile(
+    new URL("../src/data/model-contract.json", import.meta.url),
+    "utf8",
+  ),
+);
+assert.deepEqual(
+  JSON.parse(
+    await readFile(new URL("gex/model-contract.json", output), "utf8"),
+  ),
+  contract,
+  "Model contract drift",
+);
+assert.deepEqual(release.modelVersions, contract.versions);
+assert.equal(release.schemaVersion, "1.1.0");
+assert.equal(typeof release.sourceTreeDirty, "boolean");
+for (const key of [
+  "behavior",
+  "experiment",
+  "world",
+  "simulation",
+  "metric",
+  "export",
+])
+  assert.match(contract.versions[key], /^\d+\.\d+\.\d+$/);
+assert.ok(
+  Object.keys(release.files).length > 10,
+  "Release inventory is missing",
+);
+for (const [path, hash] of Object.entries(release.files)) {
+  assert.ok(
+    !path.startsWith("/") && !path.split("/").includes(".."),
+    "Invalid release inventory path",
+  );
+  assert.equal(
+    createHash("sha256")
+      .update(await readFile(new URL(path, output)))
+      .digest("hex"),
+    hash,
+    `Artifact drift: ${path}`,
+  );
+}
 assert.match(release.commit, /^[0-9a-f]{40}$/);
 assert.equal(release.repository, "aserdargun/gex-aserdargun-com");
 assert.equal(config.mimeTypes[".glb"], "model/gltf-binary");
@@ -53,5 +106,5 @@ for (const file of [
   );
 }
 console.log(
-  "Azure artifact verified: six routes, entry assets, GLBs, CUDA examples, MIME and release identity.",
+  "Azure artifact verified: six routes, entry assets, GLBs, CUDA examples, MIME, model versions, file hashes and release identity.",
 );

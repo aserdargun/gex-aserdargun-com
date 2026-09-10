@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-label="gex">
-  <rect width="320" height="320" rx="64" fill="#121310"/>
-  <circle cx="160" cy="142" r="108" fill="#c8ff36"/>
+  <rect width="320" height="320" rx="64" fill="#111719"/>
+  <circle cx="160" cy="142" r="108" fill="#abd8c1"/>
   <g transform="translate(60 42)" stroke="#0c0d0a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
     <rect x="22" y="22" width="156" height="156" rx="8" fill="none" />
     <g fill="#0c0d0a">
@@ -20,7 +20,7 @@
       <rect x="136" y="136" width="22" height="22" />
     </g>
   </g>
-  <text x="160" y="296" text-anchor="middle" fill="#c8ff36"
+  <text x="160" y="296" text-anchor="middle" fill="#abd8c1"
     font-family="Inter, Helvetica, Arial, sans-serif" font-size="40" font-weight="800"
     letter-spacing="-2">GEX</text>
 </svg>

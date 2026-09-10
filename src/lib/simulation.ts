@@ -1,9 +1,11 @@
 import type { Branch, Pattern } from "../data/types";
 
-export const WARP_SIZE = 32;
-export const TEACHING_SMS = 4;
-export const VALUES_PER_GROUP = 8;
-export const MEMORY_VALUES = 256;
+import contract from "../data/model-contract.json";
+export const WARP_SIZE = contract.constants.warpSize;
+export const TEACHING_SMS = contract.constants.teachingSms;
+export const VALUES_PER_GROUP = contract.constants.valuesPerGroup;
+export const MEMORY_VALUES = contract.constants.memoryValues;
+export const BYTES_PER_VALUE = contract.constants.bytesPerValue;
 
 /** A reproducible permutation, deliberately unlike contiguous addresses. */
 export function addressForLane(lane: number, pattern: Pattern, stride = 8) {
@@ -21,8 +23,8 @@ export function memoryAccess(pattern: Pattern, stride = 8) {
   return {
     addresses,
     groups,
-    usefulBytes: WARP_SIZE * 4,
-    groupedBytes: groups.length * VALUES_PER_GROUP * 4,
+    usefulBytes: WARP_SIZE * BYTES_PER_VALUE,
+    groupedBytes: groups.length * VALUES_PER_GROUP * BYTES_PER_VALUE,
   };
 }
 
@@ -57,7 +59,7 @@ export function vectorChecksum(elements: number) {
   return (3 * elements * (elements - 1)) / 2;
 }
 
-export const MATRIX_N = 8;
+export const MATRIX_N = contract.constants.matrixN;
 export const matrixA = Array.from(
   { length: 64 },
   (_, i) => ((Math.floor(i / 8) + (i % 8)) % 4) + 1,

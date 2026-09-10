@@ -145,7 +145,7 @@ export function stateUrl(state: ExplorerState) {
   if (state.mode === "anatomy" || state.mode === "sm")
     q.set("part", state.selectedComponent);
   if (!state.labels) q.set("labels", "off");
-  if (state.mode === "kernel") {
+  if (["kernel", "anatomy", "sm"].includes(state.mode)) {
     q.set("blocks", String(state.blocks));
     q.set("threads", String(state.threads));
   }
@@ -160,7 +160,7 @@ export function stateUrl(state: ExplorerState) {
     q.set("compute", state.tensorPath ? "tensor" : "scalar");
     q.set("cell", String(state.selectedCell));
   }
-  if (["warp", "memory", "kernel"].includes(state.mode))
+  if (["warp", "memory", "kernel", "anatomy"].includes(state.mode))
     q.set("lane", String(state.selectedLane));
   if (state.textView) q.set("view", "text");
   return `/gex/${state.mode}?${q}`;

@@ -51,7 +51,7 @@ npm run build:azure
 
 ## Azure publication
 
-The standalone release retains `/gex/...` routes and links back to the public GPU Atlas. `npm run build:azure` stages `azure-artifact/gex/`, verifies route and asset integrity, and writes commit-correlated `/release.json` metadata. The combined Atlas integration above remains a separate release path.
+The standalone release retains `/gex/...` routes and links back to the public GPU Atlas. `npm run build:azure` stages `azure-artifact/gex/`, verifies route and asset integrity, and writes `/release.json` with the source commit, an explicit dirty-worktree flag, model versions and SHA-256 hashes for every staged file. The verifier rejects route/configuration drift, model-contract drift and modified artifact files. The combined Atlas integration above remains a separate release path.
 
 GitHub Actions deploys `main` using the single workflow `.github/workflows/deploy-swa-gex-aserdargun-com.yml`. The target is `swa-gex-aserdargun-com` in `rg-gex-aserdargun-com`, West Europe, **Free**, on **aserdargun subscription 3**. Deployment credentials exist only as an Actions secret. No custom domain is configured by this workflow.
 
@@ -62,7 +62,8 @@ GitHub Actions deploys `main` using the single workflow `.github/workflows/deplo
 - `public/models/gex-gpu.glb` and `gex-sm.glb`: self-contained web geometry, together under 1 MB.
 - `public/models/manifest.json`: asset sizes, anchors and camera inventory.
 - `src/data/`: bilingual curriculum, sources, component roles and lesson mappings.
-- `src/lib/`: pure numerical model, URL validation and temporal state.
+- `src/lib/`: pure numerical model, URL validation, temporal state and shared parameter-aware lesson explanations.
+- `src/data/model-contract.json`: explicit behavior, experiment, world, simulation, metric and export versions, constants and units; also staged into the build.
 - `src/scene/`: interactive instancing, camera transitions, address traces and data packets.
 - `public/examples/`: self-contained CUDA reference programs with host-side checks.
 - `docs/curriculum.md`: source mapping, abstraction policy and scope boundaries.

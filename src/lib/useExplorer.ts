@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { parseLocation, reducer, stateUrl, type Action } from "./state";
+import { lessons } from "../data/lessons";
 import type { ExplorerState, Mode } from "../data/types";
 
 import { CONTEXT_PARAM, encodeLearningContext } from "@aserdargun/lab-core";
@@ -35,16 +36,17 @@ export function useExplorer() {
     [],
   );
   const act = useCallback((action: Action) => dispatch(action), []);
+  const url = new URL(stateUrl(state), window.location.origin);
+  if (learningContext)
+    url.searchParams.set(CONTEXT_PARAM, encodeLearningContext(learningContext));
+  const experimentLink = url.href;
   useEffect(() => {
-    const url = new URL(stateUrl(state), window.location.origin);
-    if (learningContext)
-      url.searchParams.set(
-        CONTEXT_PARAM,
-        encodeLearningContext(learningContext),
-      );
-    window.history.replaceState(null, "", url);
+    window.history.replaceState(null, "", experimentLink);
+  }, [experimentLink]);
+  useEffect(() => {
     document.documentElement.lang = state.locale;
-  }, [state, learningContext]);
+    document.title = `${lessons[state.mode].name[state.locale]} · GEX`;
+  }, [state.locale, state.mode]);
   useEffect(() => {
     const pop = () => {
       const url = new URL(window.location.href);
@@ -77,6 +79,6 @@ export function useExplorer() {
     );
     return () => window.clearTimeout(id);
   }, [state.playing, state.step, state.mode, state.speed]);
-  return { state, act, patch, navigate, learningContext };
+  return { state, act, patch, navigate, learningContext, experimentLink };
 }
 export type Explorer = ReturnType<typeof useExplorer>;

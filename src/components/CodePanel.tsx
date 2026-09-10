@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Copy, Check, Download } from "lucide-react";
 import { lessons } from "../data/lessons";
 import type { ExplorerState } from "../data/types";
+import { stepForState } from "../lib/presentation";
 import { addressForLane } from "../lib/simulation";
 
 export function codeForState(state: ExplorerState) {
@@ -17,10 +18,13 @@ export function codeForState(state: ExplorerState) {
         : state.pattern === "strided"
           ? `int address = lane * ${state.stride};`
           : "int address = (lane * 73 + 19) % 256;";
-  if (state.mode === "tensor")
+  if (state.mode === "tensor") {
+    code[0] = `acc = zeros(${state.tileSize}, ${state.tileSize});`;
+    code[1] = `for (k = 0; k < 8; k += ${state.tileSize}) {`;
     code[5] = state.tensorPath
       ? "  acc += matrix_multiply(a_tile, b_tile);"
       : "  acc += scalar_dot_products(a_tile, b_tile);";
+  }
   return code;
 }
 function highlight(line: string) {
@@ -48,13 +52,11 @@ export function CodePanel({ state }: { state: ExplorerState }) {
   const [copiedCode, setCopiedCode] = useState(""),
     [copyFailed, setCopyFailed] = useState(false);
   const lesson = lessons[state.mode],
-    step = lesson.steps[state.step],
+    step = stepForState(state),
     tr = state.locale === "tr";
   const code = codeForState(state);
   const codeText = code.join("\n");
   const copied = copiedCode === codeText;
-  const singleWarpWait =
-    state.mode === "kernel" && state.step === 9 && state.threads === 32;
   async function copy() {
     try {
       await navigator.clipboard.writeText(codeText);
@@ -134,23 +136,11 @@ export function CodePanel({ state }: { state: ExplorerState }) {
           {tr ? "ŞİMDİKİ ADIM" : "CURRENT STEP"}:{" "}
           <span className="sage">{step.label[state.locale]}</span>
         </div>
-        <h3>
-          {singleWarpWait
-            ? tr
-              ? "Bu SM’de başka hazır warp yok."
-              : "No other warp is ready on this SM."
-            : step.title[state.locale]}
-        </h3>
-        <p>
-          {singleWarpWait
-            ? tr
-              ? "32 thread ve bir blok yeriyle bu eğitim SM’sinde yalnızca bir warp bulunur. Alternatif iş görebilmek için blok boyutunu artır."
-              : "With 32 threads and one block slot, this teaching SM has only one resident warp. Increase the block size to introduce other work."
-            : step.body[state.locale]}
-        </p>
+        <h3>{step.title[state.locale]}</h3>
+        <p>{step.body[state.locale]}</p>
         {state.mode === "memory" && (
           <code className="event-formula">
-            lane {state.selectedLane} → A[
+            {tr ? "şerit" : "lane"} {state.selectedLane} → A[
             {addressForLane(state.selectedLane, state.pattern, state.stride)}]
           </code>
         )}

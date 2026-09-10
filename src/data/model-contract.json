@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "versions": {
+    "behavior": "1.1.0",
+    "experiment": "1.1.0",
+    "world": "1.0.0",
+    "simulation": "1.0.0",
+    "metric": "1.0.0",
+    "export": "1.1.0"
+  },
+  "constants": {
+    "warpSize": 32,
+    "teachingSms": 4,
+    "valuesPerGroup": 8,
+    "bytesPerValue": 4,
+    "memoryValues": 256,
+    "matrixN": 8
+  },
+  "units": {
+    "memory": "bytes",
+    "geometry": "educational units",
+    "playback": "educational events, not GPU cycles"
+  },
+  "evidence": "deterministic educational model; no GPU execution or measured telemetry"
+}

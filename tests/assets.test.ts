@@ -43,6 +43,8 @@ describe("educational asset contract", () => {
       );
       expect(code).toContain("int main()");
       expect(code).toContain("cudaGetLastError");
+      expect(code).toContain("__FILE__, __LINE__");
+      expect(code).not.toMatch(/__[a-z]+-[a-z]+__/);
       expect(
         lesson.sources.every(
           (s) => new URL(s.url).hostname === "docs.nvidia.com",
@@ -50,4 +52,13 @@ describe("educational asset contract", () => {
       ).toBe(true);
     }
   });
+});
+
+it("keeps the public icon in the GEX palette", () => {
+  const icon = readFileSync(
+    new URL("../public/favicon.svg", import.meta.url),
+    "utf8",
+  );
+  expect(icon).not.toContain("#c8ff36");
+  expect(icon).toContain("#abd8c1");
 });

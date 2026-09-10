@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <vector>
 #define CUDA(call) do { cudaError_t e=(call); if(e!=cudaSuccess) { \
-  std::fprintf(stderr, "%s:%d: %s\n", __tiled-gemm__, __LINE__, cudaGetErrorString(e)); \
+  std::fprintf(stderr, "%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(e)); \
   std::exit(1); } } while(0)
 
 // This executable demonstrates shared-memory tiling on the scalar arithmetic path.
