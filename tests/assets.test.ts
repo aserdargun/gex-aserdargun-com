@@ -59,6 +59,8 @@ it("keeps the public icon in the GEX palette", () => {
     new URL("../public/favicon.svg", import.meta.url),
     "utf8",
   );
-  expect(icon).not.toContain("#c8ff36");
-  expect(icon).toContain("#abd8c1");
+  expect(icon).toContain("#c8ff36");
+  expect(icon).toContain("#121310");
+  expect(icon).not.toContain("#abd8c1");
+  expect(icon).not.toContain("#111719");
 });
