@@ -1,10 +1,21 @@
 import { lessons } from "../data/lessons";
 import { l, type ExplorerState, type LessonStep } from "../data/types";
-import { launchShape } from "./simulation";
+import { launchShape, TEACHING_SMS } from "./simulation";
 
 /** One explanation for the scene, text alternative, timeline and code panel. */
 export function stepForState(state: ExplorerState): LessonStep {
   const step = lessons[state.mode].steps[state.step];
+  if (state.mode === "kernel" && state.step === 2) {
+    const occupied = Math.min(state.blocks, TEACHING_SMS);
+    const remaining = Math.max(0, state.blocks - TEACHING_SMS);
+    return {
+      ...step,
+      body: l(
+        `The first wave uses ${occupied} of ${TEACHING_SMS} teaching SM slots. ${remaining} blocks wait for a later wave. This is an illustrative assignment, not a hardware scheduling guarantee.`,
+        `İlk dalga ${TEACHING_SMS} eğitim SM’sindeki yerlerin ${occupied} tanesini kullanır. ${remaining} blok sonraki dalgayı bekler. Bu yerleşim temsilidir; donanım zamanlama garantisi değildir.`,
+      ),
+    };
+  }
   if (state.mode === "kernel" && state.step === 9 && state.threads === 32)
     return {
       ...step,
@@ -55,6 +66,7 @@ export function stepForState(state: ExplorerState): LessonStep {
   if (state.mode === "memory" && state.cacheHit && state.step === 2)
     return {
       ...step,
+      label: l("L1 hit", "L1 isabeti"),
       title: l("The L1 hit stays local.", "L1 isabeti yerelde kalır."),
       body: l(
         "The selected L1-hit scenario supplies the value locally. L2 and device memory are bypassed; address-group counts remain unchanged.",

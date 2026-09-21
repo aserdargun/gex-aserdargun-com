@@ -175,10 +175,10 @@
           "en": "Learn the theory · GPU Kernel Atlas",
           "tr": "Kuramı öğren · GPU Kernel Atlas"
         },
-        "url": "https://gpu.aserdargun.com/en",
+        "url": "https://gpu.aserdargun.com/en/",
         "localizedUrls": {
-          "en": "https://gpu.aserdargun.com/en",
-          "tr": "https://gpu.aserdargun.com/tr"
+          "en": "https://gpu.aserdargun.com/en/",
+          "tr": "https://gpu.aserdargun.com/?lang=tr"
         }
       }
     ],
@@ -187,7 +187,7 @@
         "id": "tfl",
         "label": {
           "en": "Explore serving · TFL",
-          "tr": "Sunumu keşfet · TFL"
+          "tr": "Model sunumunu keşfet · TFL"
         },
         "url": "https://tfl.aserdargun.com/"
       }

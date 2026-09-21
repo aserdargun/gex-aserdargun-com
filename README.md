@@ -35,7 +35,9 @@ Play, pause, next/previous event, reset, speed and event selection control every
 
 ## GPU Atlas integration
 
-The existing public Atlas does not yet support module deep links. Standalone GEX links to its actual locale homepage and identifies the related module. The included integration patch adds real `#module=...` navigation, locale-preserving GEX links within related Atlas lessons, and Azure routes for `/gex`.
+Standalone GEX opens the matching public GPU Kernel Atlas module with `?module=...`. English uses `/en/`; Turkish uses `/?lang=tr` so a saved English preference cannot override the requested language. The same destinations appear in the ILS experiment catalog. The portfolio breadcrumb links to the matching aserdargun.com locale; the learning notes explain the Atlas → GEX → TFL relationship.
+
+The optional legacy integration patch below targets a pinned older Atlas checkout. It adds `#module=...` navigation and Azure routes for `/gex`; it is not the current public Atlas routing contract.
 
 ```sh
 npm run build:atlas
@@ -47,7 +49,7 @@ npm run build:azure
 
 `atlas-artifact/gex/` is the mountable static artifact. The patch is based on Atlas commit `17b5a630958972625e8547e9606a6f3a953a666d`; `git apply --check` refuses incompatible source. The integrated build requires `gex-dist/` and fails if it is missing. Only deploy after the combined artifact and reciprocal links have been reviewed. No Azure resource or public deployment is created by these scripts.
 
-`VITE_ATLAS_DEEP_LINKS=true` makes the integrated GEX return to the Atlas on the same origin. `VITE_ATLAS_ORIGIN` can explicitly override that origin for a separate development setup. All static resources live below `/gex/` so they cannot collide with Atlas assets.
+`VITE_ATLAS_DEEP_LINKS=true` selects the legacy bridge’s hash links and returns to the Atlas on the same origin. `VITE_ATLAS_ORIGIN` can explicitly override that origin for a separate development setup. All static resources live below `/gex/` so they cannot collide with Atlas assets.
 
 ## Azure publication
 
@@ -76,7 +78,7 @@ The kernel launch uses four teaching SMs with one block slot each, not a univers
 
 Numerical results are calculated, never presented as profiler measurements. The tests validate address grouping, complementary masks, launch waves, vector checksums, matrix products, tile partitioning, URL constraints and GLB structure. CUDA downloads require NVIDIA hardware and a CUDA Toolkit; they have not been compiled or run on this Mac.
 
-Occupancy, architecture lenses, LLM inference and multi-GPU are future curriculum phases, deliberately outside the six-experience MVP.
+Occupancy, architecture lenses, standalone LLM workload simulation and multi-GPU remain outside the six lessons. The existing TFL handoff maps educational prefill/decode context to tensor/memory scenes; it does not simulate an LLM workload here.
 
 ## ILS v0.1 pilot
 
@@ -84,6 +86,6 @@ Occupancy, architecture lenses, LLM inference and multi-GPU are future curriculu
 
 Both packages are consumed through committed, content-addressed `vendor/*.tgz` archives and npm lockfile integrity, with provenance in `vendor/ils-provenance.json`. CI needs no sibling checkout, symlink or registry credentials. Update them only by building/packing canonical ILS and running its pilot installer, then run this repository's normal validation. Never edit installed package files. Ahead-of-time JSON Schema validators work without runtime code generation.
 
-TFL prefill links open the existing tensor scene; decode links open memory. A validated 1 KB maximum educational context produces a localized origin notice and a return link to a paused TFL checkpoint. Batch/sequence classes describe the source without inventing a GPU workload. Existing routes, numerical model, 3D scenes and playback remain app-owned. Invalid context is ignored. The published manifest artifact path is `/gex/lab.manifest.json`.
+TFL prefill links open the existing tensor scene; decode links open memory. A validated 1 KB maximum educational context produces a localized origin notice and a return link to the TFL source experiment/concept. Legacy pilot contexts return to the corresponding guided checkpoint; neither format restores exact simulator state. Batch/sequence classes describe the source without inventing a GPU workload. Existing routes, numerical model, 3D scenes and playback remain app-owned. Invalid context is ignored. The published manifest artifact path is `/gex/lab.manifest.json`.
 
 Manifest status `live` identifies the GEX/TFL production release; deployment must still be verified against its source commit. Canonical ILS documents include the migration guide, compatibility checklist, protocol, architecture review and cross-lab browser acceptance test.

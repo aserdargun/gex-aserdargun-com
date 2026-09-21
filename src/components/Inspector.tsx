@@ -11,16 +11,7 @@ import {
   matrixCell,
 } from "../lib/simulation";
 import type { Explorer } from "../lib/useExplorer";
-
-export function atlasUrl(locale: string, module?: string) {
-  // The public Atlas has no module deep links yet. The bridge enables them on an integrated build.
-  const deep = import.meta.env.VITE_ATLAS_DEEP_LINKS === "true";
-  const origin =
-    import.meta.env.VITE_ATLAS_ORIGIN ||
-    (deep ? window.location.origin : "https://gpu.aserdargun.com");
-  // An explicit Turkish query prevents Atlas's saved English preference from overriding the return link.
-  return `${origin}${locale === "tr" ? "/?lang=tr" : "/en/"}${deep && module ? `#module=${module}` : ""}`;
-}
+import { atlasUrl } from "../lib/links";
 export function Inspector(explorer: Explorer) {
   const { state, patch, navigate } = explorer,
     lesson = lessons[state.mode],
@@ -277,7 +268,7 @@ export function Inspector(explorer: Explorer) {
           <ArrowUpRight size={15} />
         </a>
         <small className="atlas-module">
-          GPU Atlas · {lesson.relatedAtlas.name}
+          GPU Atlas · {lesson.relatedAtlas.name[state.locale]}
         </small>
       </section>
     </aside>

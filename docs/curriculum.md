@@ -1,6 +1,6 @@
 # GEX curriculum and abstraction contract
 
-GEX is the execution layer of GPU Kernel Atlas. Read, code and benchmark in the Atlas; inspect spatial relationships and step through causal examples here. The first release contains exactly six experiences.
+GEX is the execution layer of GPU Kernel Atlas. Study theory, code and benchmarking methods in the Atlas; inspect spatial relationships and step through causal examples here. The first release contains exactly six experiences.
 
 | Experience          | Engineering question                             | Interactive evidence                                                                                                                        | Atlas module                                            |
 | ------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
@@ -26,7 +26,7 @@ The GEMM uses small exact integer inputs in a JavaScript reference calculation. 
 
 ## Source mapping
 
-Reviewed 2026-09-08. Lesson records carry their own source links and Atlas/concept/code/experiment metadata.
+Reviewed 2026-09-21. Lesson records carry their own source links and Atlas/concept/code/experiment metadata.
 
 - [NVIDIA CUDA programming model](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html): hardware hierarchy and launch vocabulary.
 - [NVIDIA advanced kernel programming](https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html): SIMT, scheduling and independent thread execution boundaries.
@@ -35,8 +35,16 @@ Reviewed 2026-09-08. Lesson records carry their own source links and Atlas/conce
 - [CUTLASS efficient GEMM](https://docs.nvidia.com/cutlass/latest/media/docs/cpp/efficient_gemm.html): hierarchical tiling and accumulation.
 - [CUTLASS GEMM API](https://docs.nvidia.com/cutlass/latest/media/docs/cpp/gemm_api.html): matrix operations at different execution levels.
 
-The Atlas source and live EN interface were inspected. Its current public module buttons use in-memory selection rather than addressable module routes. Do not claim an invented module fragment already works in production; the integration bridge must add real routing before publishing direct lesson links.
+The current Atlas source and live module navigation were checked. Public modules use `?module=visual|architecture|memory|cutlass`, with `/en/` for English and `/?lang=tr` for explicit Turkish. GEX and its ILS catalog link directly to the relevant module. The optional integration patch targets an older pinned checkout and retains its separate `#module=...` contract.
+
+The root portfolio positions GPU Atlas as GEX’s parent and TFL as a related downstream lab. The bilingual breadcrumb and learning-path explanation expose this relationship. TFL’s existing prefill/decode handoff is a conceptual connection to the tensor/memory lessons, not an LLM simulator or a transfer of measured GPU work.
 
 ## Scope after the MVP
 
-V2: occupancy/resource packing, bank conflicts, register pressure and sourced architecture lenses. V3: LLM operation graphs, KV cache, prefill/decode and serving. V4: multi-GPU topologies and collectives. These do not appear as nonfunctional MVP navigation items.
+V2: occupancy/resource packing, bank conflicts, register pressure and sourced architecture lenses. V3: native LLM operation graphs, KV-cache and serving simulation beyond the existing conceptual TFL handoff. V4: multi-GPU topologies and collectives. These do not appear as nonfunctional MVP navigation items.
+
+## Reproducible lesson observations
+
+Each bilingual “Try this” prompt states an observation that the current controls can reproduce. Kernel scheduling text uses the selected block count; L1-hit timelines name the selected path. Memory strides are measured in elements, with four bytes per value. For C[0,0], the first K contribution is 7 with tile size 2 and 17 with tile size 4; both complete at 39. These are calculated reference values, not measured throughput or timing.
+
+CUDA downloads have fixed reference settings and are not exports of URL parameters. The tiled GEMM download uses shared-memory scalar arithmetic, not MMA instructions. The UI states the NVIDIA GPU/CUDA Toolkit requirements.

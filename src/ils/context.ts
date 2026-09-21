@@ -108,5 +108,5 @@ export function returnToServing(
 }
 export const contextExplanation = {
   en: "Serving compute maps to an existing GPU teaching scene. The context describes the source educational workload; no request state, exact timing or hardware workload is transferred.",
-  tr: "Sunum hesaplaması mevcut GPU eğitim sahnesine eşlenir. Bağlam kaynak eğitim iş yükünü tanımlar; istek durumu, kesin süre veya donanım iş yükü aktarılmaz.",
+  tr: "Model sunumundaki hesaplama mevcut GPU eğitim sahnesine eşlenir. Bağlam kaynak eğitim iş yükünü tanımlar; istek durumu, kesin süre veya donanım iş yükü aktarılmaz.",
 };

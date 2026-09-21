@@ -38,8 +38,8 @@ export type Lesson = {
   steps: LessonStep[];
   code: string[];
   codeKind: Localized;
-  relatedAtlas: { module: string; name: string };
-  relatedConcept: string;
+  relatedAtlas: { module: string; name: Localized };
+  relatedConcept: Localized;
   relatedCodeExample: string;
   relatedExperiment: Localized;
   sources: { title: string; url: string }[];

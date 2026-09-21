@@ -81,8 +81,8 @@ export function CodePanel({ state }: { state: ExplorerState }) {
               download
               aria-label={
                 tr
-                  ? "Çalıştırılabilir CUDA örneğini indir"
-                  : "Download runnable CUDA example"
+                  ? "CUDA referans örneğini indir"
+                  : "Download CUDA reference example"
               }
             >
               <Download size={14} />
@@ -130,6 +130,15 @@ export function CodePanel({ state }: { state: ExplorerState }) {
             ))}
           </code>
         </pre>
+        <p className="download-note">
+          {tr
+            ? "İndirilen dosya sabit ayarlı bir CUDA referansıdır; ekrandaki deneyin dışa aktarımı değildir. NVIDIA GPU ve CUDA Toolkit gerektirir; tarayıcıda çalıştırılmaz."
+            : "The download is a CUDA reference with fixed settings, not an export of this experiment. It requires an NVIDIA GPU and CUDA Toolkit; it does not run in the browser."}
+          {state.mode === "tensor" &&
+            (tr
+              ? " Örnek paylaşılan bellekte döşemeli skaler aritmetik kullanır; MMA komutu içermez."
+              : " The example uses shared-memory tiling with scalar arithmetic; it contains no MMA instruction.")}
+        </p>
       </div>
       <div className="event-panel" aria-live="polite" aria-atomic="true">
         <div className="small-heading">

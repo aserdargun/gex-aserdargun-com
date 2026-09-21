@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0.0",
   "versions": {
-    "behavior": "1.1.0",
-    "experiment": "1.1.0",
+    "behavior": "1.2.0",
+    "experiment": "1.2.0",
     "world": "1.0.0",
     "simulation": "1.0.0",
     "metric": "1.0.0",

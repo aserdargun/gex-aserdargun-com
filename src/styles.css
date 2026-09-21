@@ -1888,6 +1888,29 @@ select option {
   background: #ffedc233;
 }
 
+.portfolio-path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.portfolio-path a {
+  color: var(--sage);
+  text-underline-offset: 3px;
+}
+.download-note {
+  padding: 10px 18px;
+  margin: 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
 /* ILS participates in the existing mobile lesson order. */
 @media (max-width: 800px) {
   .main > .ils-context {
@@ -1944,6 +1967,12 @@ select option {
   .timeline button {
     font-size: 10px;
     min-height: 44px;
+  }
+  .timeline button span {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
   }
 }
 @media (max-width: 500px) {

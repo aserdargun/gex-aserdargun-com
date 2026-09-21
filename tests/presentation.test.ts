@@ -15,6 +15,23 @@ import type { ExplorerState } from "../src/data/types";
 
 const patch = () => {};
 describe("consistent lesson observations", () => {
+  it.each([1, 3, 4, 5, 16])(
+    "describes the occupied and waiting slots for %i blocks",
+    (blocks) => {
+      const step = stepForState({
+        ...initialState,
+        mode: "kernel",
+        step: 2,
+        blocks,
+      });
+      expect(step.body.en).toContain(`${Math.min(blocks, 4)} of 4`);
+      expect(step.body.en).toContain(`${Math.max(0, blocks - 4)} blocks wait`);
+      expect(step.body.tr).toContain(
+        `yerlerin ${Math.min(blocks, 4)} tanesini`,
+      );
+      expect(step.body.tr).toContain(`${Math.max(0, blocks - 4)} blok sonraki`);
+    },
+  );
   it.each(["en", "tr"] as const)(
     "explains a single waiting warp identically in %s",
     (locale) => {
@@ -58,6 +75,10 @@ describe("consistent lesson observations", () => {
     ).toContain("Skip");
   });
   it("reflects the selected cache and arithmetic paths", () => {
+    expect(
+      stepForState({ ...initialState, mode: "memory", step: 2, cacheHit: true })
+        .label,
+    ).toEqual({ en: "L1 hit", tr: "L1 isabeti" });
     expect(
       stepForState({ ...initialState, mode: "memory", step: 2, cacheHit: true })
         .title.en,

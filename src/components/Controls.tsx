@@ -221,7 +221,7 @@ export function ExperimentControls({ state, patch }: Explorer) {
           </div>
           {state.pattern === "strided" && (
             <label>
-              {tr ? "Adres adımı" : "Address stride"}
+              {tr ? "Adres adımı (eleman)" : "Address stride (elements)"}
               <select
                 value={state.stride}
                 onChange={(e) => change({ stride: Number(e.target.value) })}

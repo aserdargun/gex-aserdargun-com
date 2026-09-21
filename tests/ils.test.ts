@@ -45,6 +45,17 @@ it("maps actual six scenes and all kernel lesson steps", () => {
   for (const e of experiments) {
     expect(e.config?.mode).toBe(e.id);
     expect(e.title).toEqual(lessons[e.config!.mode].name);
+    const lesson = lessons[e.config!.mode];
+    expect(e.observations![0].explanation).toEqual(lesson.relatedExperiment);
+    for (const locale of ["en", "tr"] as const) {
+      const destination = new URL(e.relatedTheory![0].localizedUrls![locale]!);
+      expect(destination.searchParams.get("module")).toBe(
+        lesson.relatedAtlas.module,
+      );
+      expect(destination.pathname).toBe(locale === "tr" ? "/" : "/en/");
+      if (locale === "tr")
+        expect(destination.searchParams.get("lang")).toBe("tr");
+    }
   }
   expect(guidedLesson.steps.map((s) => s.explanation)).toEqual(
     lessons.kernel.steps.map((s) => s.body),

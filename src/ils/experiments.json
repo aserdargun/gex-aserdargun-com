@@ -42,8 +42,8 @@
           "tr": "GPU Anatomisi"
         },
         "explanation": {
-          "en": "Select the die, then follow a kernel.",
-          "tr": "Yongayı seç, ardından bir kerneli izle."
+          "en": "Select the die, SM and global memory. Trace which parts store data and which execute instructions, then follow a kernel.",
+          "tr": "Yongayı, SM’yi ve global belleği seç. Hangi parçanın veri tuttuğunu, hangisinin komut yürüttüğünü izle; ardından bir kerneli takip et."
         },
         "evidenceRefs": ["conceptual-execution", "numerical-reference"]
       }
@@ -57,10 +57,10 @@
           "en": "Learn the theory · GPU Kernel Atlas",
           "tr": "Kuramı öğren · GPU Kernel Atlas"
         },
-        "url": "https://gpu.aserdargun.com/en",
+        "url": "https://gpu.aserdargun.com/en/?module=visual",
         "localizedUrls": {
-          "en": "https://gpu.aserdargun.com/en",
-          "tr": "https://gpu.aserdargun.com/tr"
+          "en": "https://gpu.aserdargun.com/en/?module=visual",
+          "tr": "https://gpu.aserdargun.com/?lang=tr&module=visual"
         }
       }
     ],
@@ -69,7 +69,7 @@
         "id": "tfl",
         "label": {
           "en": "Explore serving · TFL",
-          "tr": "Sunumu keşfet · TFL"
+          "tr": "Model sunumunu keşfet · TFL"
         },
         "url": "https://tfl.aserdargun.com/"
       }
@@ -121,8 +121,8 @@
           "tr": "SM’nin İçinde"
         },
         "explanation": {
-          "en": "Watch which warp is waiting and which can issue.",
-          "tr": "Hangi warp’ın beklediğini, hangisinin ilerleyebildiğini izle."
+          "en": "Step from Wait A to Issue B. A remains resident while B issues; waiting does not release A’s registers or shared memory.",
+          "tr": "A bekle adımından B başlat adımına geç. B ilerlerken A yerleşik kalır; beklemek A’nın yazmaçlarını veya paylaşılan belleğini serbest bırakmaz."
         },
         "evidenceRefs": ["conceptual-execution", "numerical-reference"]
       }
@@ -136,10 +136,10 @@
           "en": "Learn the theory · GPU Kernel Atlas",
           "tr": "Kuramı öğren · GPU Kernel Atlas"
         },
-        "url": "https://gpu.aserdargun.com/en",
+        "url": "https://gpu.aserdargun.com/en/?module=architecture",
         "localizedUrls": {
-          "en": "https://gpu.aserdargun.com/en",
-          "tr": "https://gpu.aserdargun.com/tr"
+          "en": "https://gpu.aserdargun.com/en/?module=architecture",
+          "tr": "https://gpu.aserdargun.com/?lang=tr&module=architecture"
         }
       }
     ],
@@ -148,7 +148,7 @@
         "id": "tfl",
         "label": {
           "en": "Explore serving · TFL",
-          "tr": "Sunumu keşfet · TFL"
+          "tr": "Model sunumunu keşfet · TFL"
         },
         "url": "https://tfl.aserdargun.com/"
       }
@@ -200,8 +200,8 @@
           "tr": "Kernel Başlatma"
         },
         "explanation": {
-          "en": "Change the block size and count. Step to the final result.",
-          "tr": "Blok boyutunu ve sayısını değiştir. Sonuca kadar adımla."
+          "en": "Compare 4 and 5 blocks: the teaching model needs 1 and 2 waves. Then select 32 threads per block and inspect the waiting step: this SM has no second resident warp.",
+          "tr": "4 ve 5 bloğu karşılaştır: eğitim modeli sırasıyla 1 ve 2 dalga kullanır. Ardından blok başına 32 thread seçip bekleme adımını incele: bu SM’de ikinci yerleşik warp yoktur."
         },
         "evidenceRefs": ["conceptual-execution", "numerical-reference"]
       }
@@ -215,10 +215,10 @@
           "en": "Learn the theory · GPU Kernel Atlas",
           "tr": "Kuramı öğren · GPU Kernel Atlas"
         },
-        "url": "https://gpu.aserdargun.com/en",
+        "url": "https://gpu.aserdargun.com/en/?module=architecture",
         "localizedUrls": {
-          "en": "https://gpu.aserdargun.com/en",
-          "tr": "https://gpu.aserdargun.com/tr"
+          "en": "https://gpu.aserdargun.com/en/?module=architecture",
+          "tr": "https://gpu.aserdargun.com/?lang=tr&module=architecture"
         }
       }
     ],
@@ -227,7 +227,7 @@
         "id": "tfl",
         "label": {
           "en": "Explore serving · TFL",
-          "tr": "Sunumu keşfet · TFL"
+          "tr": "Model sunumunu keşfet · TFL"
         },
         "url": "https://tfl.aserdargun.com/"
       }
@@ -279,8 +279,8 @@
           "tr": "Warp / SIMT"
         },
         "explanation": {
-          "en": "Compare uniform and alternating lane branches.",
-          "tr": "Tek tip ve dönüşümlü şerit dallanmalarını karşılaştır."
+          "en": "Compare Path A and Path B: divergent branches use 16/32 lanes each; uniform A uses 32/32, then skips the empty B path. This does not imply a measured 2× slowdown.",
+          "tr": "A ve B yollarını karşılaştır: dallanan durumda her yol 16/32 şerit kullanır; tek tip A’da 32/32 şerit çalışır ve boş B yolu atlanır. Buradan ölçülmüş 2 kat yavaşlama sonucu çıkarılamaz."
         },
         "evidenceRefs": ["conceptual-execution", "numerical-reference"]
       }
@@ -294,10 +294,10 @@
           "en": "Learn the theory · GPU Kernel Atlas",
           "tr": "Kuramı öğren · GPU Kernel Atlas"
         },
-        "url": "https://gpu.aserdargun.com/en",
+        "url": "https://gpu.aserdargun.com/en/?module=architecture",
         "localizedUrls": {
-          "en": "https://gpu.aserdargun.com/en",
-          "tr": "https://gpu.aserdargun.com/tr"
+          "en": "https://gpu.aserdargun.com/en/?module=architecture",
+          "tr": "https://gpu.aserdargun.com/?lang=tr&module=architecture"
         }
       }
     ],
@@ -306,7 +306,7 @@
         "id": "tfl",
         "label": {
           "en": "Explore serving · TFL",
-          "tr": "Sunumu keşfet · TFL"
+          "tr": "Model sunumunu keşfet · TFL"
         },
         "url": "https://tfl.aserdargun.com/"
       }
@@ -358,8 +358,8 @@
           "tr": "Bellek Yolculuğu"
         },
         "explanation": {
-          "en": "Try strides 1, 2, 4 and 8, then inspect a lane.",
-          "tr": "1, 2, 4 ve 8 adımları dene, ardından bir şeridi incele."
+          "en": "Try strides of 1, 2, 4 and 8 elements: the model touches 4, 8, 16 and 32 groups while requesting 128 B each time. An L1 hit changes the path, not these address counts.",
+          "tr": "1, 2, 4 ve 8 elemanlık adres adımlarını dene: model her seferinde 128 B isterken 4, 8, 16 ve 32 gruba erişir. L1 isabeti yolu değiştirir; bu adres sayılarını değiştirmez."
         },
         "evidenceRefs": ["conceptual-execution", "numerical-reference"]
       }
@@ -373,10 +373,10 @@
           "en": "Learn the theory · GPU Kernel Atlas",
           "tr": "Kuramı öğren · GPU Kernel Atlas"
         },
-        "url": "https://gpu.aserdargun.com/en",
+        "url": "https://gpu.aserdargun.com/en/?module=memory",
         "localizedUrls": {
-          "en": "https://gpu.aserdargun.com/en",
-          "tr": "https://gpu.aserdargun.com/tr"
+          "en": "https://gpu.aserdargun.com/en/?module=memory",
+          "tr": "https://gpu.aserdargun.com/?lang=tr&module=memory"
         }
       }
     ],
@@ -385,7 +385,7 @@
         "id": "tfl",
         "label": {
           "en": "Explore serving · TFL",
-          "tr": "Sunumu keşfet · TFL"
+          "tr": "Model sunumunu keşfet · TFL"
         },
         "url": "https://tfl.aserdargun.com/"
       }
@@ -437,8 +437,8 @@
           "tr": "Tensor / Döşemeli GEMM"
         },
         "explanation": {
-          "en": "Change tile size. Compare the two compute paths and inspect C.",
-          "tr": "Döşeme boyutunu değiştir. İki hesaplama yolunu karşılaştır ve C’yi incele."
+          "en": "Select C[0,0]. With tile size 2 the first partial sum is 7; with size 4 it is 17. Both finish at 39 after all K tiles. Scalar and MMA views share this mathematical reference, without a timing comparison.",
+          "tr": "C[0,0] öğesini seç. Döşeme boyutu 2 iken ilk kısmi toplam 7, boyut 4 iken 17 olur. Tüm K döşemeleri tamamlandığında ikisi de 39’a ulaşır. Skaler ve MMA görünümleri bu matematiksel referansı paylaşır; süre karşılaştırması yapılmaz."
         },
         "evidenceRefs": ["conceptual-execution", "numerical-reference"]
       }
@@ -452,10 +452,10 @@
           "en": "Learn the theory · GPU Kernel Atlas",
           "tr": "Kuramı öğren · GPU Kernel Atlas"
         },
-        "url": "https://gpu.aserdargun.com/en",
+        "url": "https://gpu.aserdargun.com/en/?module=cutlass",
         "localizedUrls": {
-          "en": "https://gpu.aserdargun.com/en",
-          "tr": "https://gpu.aserdargun.com/tr"
+          "en": "https://gpu.aserdargun.com/en/?module=cutlass",
+          "tr": "https://gpu.aserdargun.com/?lang=tr&module=cutlass"
         }
       }
     ],
@@ -464,7 +464,7 @@
         "id": "tfl",
         "label": {
           "en": "Explore serving · TFL",
-          "tr": "Sunumu keşfet · TFL"
+          "tr": "Model sunumunu keşfet · TFL"
         },
         "url": "https://tfl.aserdargun.com/"
       }

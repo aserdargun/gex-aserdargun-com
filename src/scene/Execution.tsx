@@ -232,8 +232,14 @@ export function Kernel({
     <group name="GEX_EXECUTION">
       <Part position={[-3, 0.0, 0.2]} size={[5.5, 0.2, 7]} color="#263236" />
       <Label position={[-3, 0.5, -4.1]}>
-        {state.step === 0 ? "HOST / CPU" : "GRID"} · {state.blocks}{" "}
-        {state.locale === "en" ? "BLOCKS" : "BLOK"}
+        {state.step === 0
+          ? state.locale === "tr"
+            ? "ANA İŞLEMCİ / CPU"
+            : "HOST / CPU"
+          : state.locale === "tr"
+            ? "IZGARA"
+            : "GRID"}{" "}
+        · {state.blocks} {state.locale === "en" ? "BLOCKS" : "BLOK"}
       </Label>
       {state.step === 0 ? (
         <Part

@@ -251,7 +251,13 @@ export function Tensor({
         }
       />
       <Label position={[0, 0.65, 4]}>
-        {state.tensorPath ? "MATRIX / MMA" : "SCALAR / FMA"}
+        {state.tensorPath
+          ? state.locale === "tr"
+            ? "MATRİS / MMA"
+            : "MATRIX / MMA"
+          : state.locale === "tr"
+            ? "SKALER / FMA"
+            : "SCALAR / FMA"}
       </Label>
       <Part
         position={[4, 0.15, 4]}

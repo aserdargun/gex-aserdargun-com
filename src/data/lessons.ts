@@ -1,5 +1,7 @@
 import { l, type Lesson, type LessonStep, type Mode } from "./types";
 
+export const sourcesReviewedAt = "2026-09-21";
+
 const programming = {
   title: "NVIDIA · CUDA programming model",
   url: "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html",
@@ -74,12 +76,18 @@ export const lessons: Record<Mode, Lesson> = {
     category: l("Educational simplification", "Eğitim amaçlı sadeleştirme"),
     code: VECTOR_CODE,
     codeKind: l("CUDA C++ · example", "CUDA C++ · örnek"),
-    relatedAtlas: { module: "visual", name: "Visual & Lasting Learning" },
-    relatedConcept: "GPU → die → SM → warp → thread",
+    relatedAtlas: {
+      module: "visual",
+      name: l("Visual & Lasting Learning", "Görsel ve Kalıcı Öğrenme"),
+    },
+    relatedConcept: l(
+      "GPU → die → SM → warp → thread",
+      "GPU → yonga → SM → warp → thread",
+    ),
     relatedCodeExample: "examples/vector-add.cu",
     relatedExperiment: l(
-      "Select the die, then follow a kernel.",
-      "Yongayı seç, ardından bir kerneli izle.",
+      "Select the die, SM and global memory. Trace which parts store data and which execute instructions, then follow a kernel.",
+      "Yongayı, SM’yi ve global belleği seç. Hangi parçanın veri tuttuğunu, hangisinin komut yürüttüğünü izle; ardından bir kerneli takip et.",
     ),
     sources: [programming],
     steps: [
@@ -160,13 +168,16 @@ export const lessons: Record<Mode, Lesson> = {
     codeKind: l("CUDA C++ · example", "CUDA C++ · örnek"),
     relatedAtlas: {
       module: "architecture",
-      name: "Architecture → SIMT → CUDA",
+      name: l("Architecture → SIMT → CUDA", "Mimari → SIMT → CUDA"),
     },
-    relatedConcept: "Resident warps → eligible work → issue",
+    relatedConcept: l(
+      "Resident warps → eligible work → issue",
+      "Yerleşik warp’lar → hazır iş → komut başlatma",
+    ),
     relatedCodeExample: "examples/vector-add.cu",
     relatedExperiment: l(
-      "Watch which warp is waiting and which can issue.",
-      "Hangi warp’ın beklediğini, hangisinin ilerleyebildiğini izle.",
+      "Step from Wait A to Issue B. A remains resident while B issues; waiting does not release A’s registers or shared memory.",
+      "A bekle adımından B başlat adımına geç. B ilerlerken A yerleşik kalır; beklemek A’nın yazmaçlarını veya paylaşılan belleğini serbest bırakmaz.",
     ),
     sources: [execution],
     steps: [
@@ -250,13 +261,16 @@ export const lessons: Record<Mode, Lesson> = {
     codeKind: l("CUDA C++ · example", "CUDA C++ · örnek"),
     relatedAtlas: {
       module: "architecture",
-      name: "Architecture → SIMT → CUDA",
+      name: l("Architecture → SIMT → CUDA", "Mimari → SIMT → CUDA"),
     },
-    relatedConcept: "Grid → block → warp → thread",
+    relatedConcept: l(
+      "Grid → block → warp → thread",
+      "Izgara → blok → warp → thread",
+    ),
     relatedCodeExample: "examples/vector-add.cu",
     relatedExperiment: l(
-      "Change the block size and count. Step to the final result.",
-      "Blok boyutunu ve sayısını değiştir. Sonuca kadar adımla.",
+      "Compare 4 and 5 blocks: the teaching model needs 1 and 2 waves. Then select 32 threads per block and inspect the waiting step: this SM has no second resident warp.",
+      "4 ve 5 bloğu karşılaştır: eğitim modeli sırasıyla 1 ve 2 dalga kullanır. Ardından blok başına 32 thread seçip bekleme adımını incele: bu SM’de ikinci yerleşik warp yoktur.",
     ),
     sources: [programming, kernels],
     steps: [
@@ -445,13 +459,16 @@ export const lessons: Record<Mode, Lesson> = {
     codeKind: l("Control-flow pseudocode", "Kontrol akışı sözde kodu"),
     relatedAtlas: {
       module: "architecture",
-      name: "Architecture → SIMT → CUDA",
+      name: l("Architecture → SIMT → CUDA", "Mimari → SIMT → CUDA"),
     },
-    relatedConcept: "SIMT → active masks → reconvergence",
+    relatedConcept: l(
+      "SIMT → active masks → reconvergence",
+      "SIMT → etkin maskeler → yeniden birleşme",
+    ),
     relatedCodeExample: "examples/branch-masks.cu",
     relatedExperiment: l(
-      "Compare uniform and alternating lane branches.",
-      "Tek tip ve dönüşümlü şerit dallanmalarını karşılaştır.",
+      "Compare Path A and Path B: divergent branches use 16/32 lanes each; uniform A uses 32/32, then skips the empty B path. This does not imply a measured 2× slowdown.",
+      "A ve B yollarını karşılaştır: dallanan durumda her yol 16/32 şerit kullanır; tek tip A’da 32/32 şerit çalışır ve boş B yolu atlanır. Buradan ölçülmüş 2 kat yavaşlama sonucu çıkarılamaz.",
     ),
     sources: [execution],
     steps: [
@@ -537,12 +554,18 @@ export const lessons: Record<Mode, Lesson> = {
       "C[lane] = result;",
     ],
     codeKind: l("Access-pattern pseudocode", "Erişim deseni sözde kodu"),
-    relatedAtlas: { module: "memory", name: "GPU Memory Lab" },
-    relatedConcept: "Address locality → cache hierarchy → registers",
+    relatedAtlas: {
+      module: "memory",
+      name: l("GPU Memory Lab", "GPU Bellek Laboratuvarı"),
+    },
+    relatedConcept: l(
+      "Address locality → cache hierarchy → registers",
+      "Adres yerelliği → önbellek hiyerarşisi → yazmaçlar",
+    ),
     relatedCodeExample: "examples/memory-patterns.cu",
     relatedExperiment: l(
-      "Try strides 1, 2, 4 and 8, then inspect a lane.",
-      "1, 2, 4 ve 8 adımları dene, ardından bir şeridi incele.",
+      "Try strides of 1, 2, 4 and 8 elements: the model touches 4, 8, 16 and 32 groups while requesting 128 B each time. An L1 hit changes the path, not these address counts.",
+      "1, 2, 4 ve 8 elemanlık adres adımlarını dene: model her seferinde 128 B isterken 4, 8, 16 ve 32 gruba erişir. L1 isabeti yolu değiştirir; bu adres sayılarını değiştirmez.",
     ),
     sources: [memory, kernels],
     steps: [
@@ -636,13 +659,19 @@ export const lessons: Record<Mode, Lesson> = {
     codeKind: l("Tiled GEMM pseudocode", "Döşemeli GEMM sözde kodu"),
     relatedAtlas: {
       module: "cutlass",
-      name: "CUTLASS · CuTe · Tensor Core · PTX",
+      name: l(
+        "CUTLASS · CuTe · Tensor Core · PTX",
+        "CUTLASS · CuTe · Tensor Core · PTX",
+      ),
     },
-    relatedConcept: "Global tiles → local working set → MMA → accumulation",
+    relatedConcept: l(
+      "Global tiles → local working set → MMA → accumulation",
+      "Global döşemeler → yerel çalışma kümesi → MMA → birikim",
+    ),
     relatedCodeExample: "examples/tiled-gemm.cu",
     relatedExperiment: l(
-      "Change tile size. Compare the two compute paths and inspect C.",
-      "Döşeme boyutunu değiştir. İki hesaplama yolunu karşılaştır ve C’yi incele.",
+      "Select C[0,0]. With tile size 2 the first partial sum is 7; with size 4 it is 17. Both finish at 39 after all K tiles. Scalar and MMA views share this mathematical reference, without a timing comparison.",
+      "C[0,0] öğesini seç. Döşeme boyutu 2 iken ilk kısmi toplam 7, boyut 4 iken 17 olur. Tüm K döşemeleri tamamlandığında ikisi de 39’a ulaşır. Skaler ve MMA görünümleri bu matematiksel referansı paylaşır; süre karşılaştırması yapılmaz.",
     ),
     sources: [gemm, mma],
     steps: [

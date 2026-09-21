@@ -19,13 +19,14 @@ import {
   Check,
   BookOpen,
 } from "lucide-react";
-import { lessons, modes } from "./data/lessons";
+import { lessons, modes, sourcesReviewedAt } from "./data/lessons";
 import { useExplorer } from "./lib/useExplorer";
 import { stepForState } from "./lib/presentation";
 import type { ComponentId, Mode } from "./data/types";
 import { Playback, ExperimentControls } from "./components/Controls";
 import { CodePanel } from "./components/CodePanel";
-import { Inspector, atlasUrl } from "./components/Inspector";
+import { Inspector } from "./components/Inspector";
+import { atlasUrl, portfolioUrl } from "./lib/links";
 import { TextView, MatrixTable, AddressTable } from "./components/TextView";
 
 import { LabShell, LearningContextNotice } from "@aserdargun/lab-ui";
@@ -217,6 +218,16 @@ export default function App() {
         </div>
       </aside>
       <main id="gex-main" className="main" tabIndex={-1}>
+        <nav
+          className="portfolio-path"
+          aria-label={tr ? "Portföy içindeki konum" : "Place in the portfolio"}
+        >
+          <a href={portfolioUrl(state.locale)}>aserdargun.com</a>
+          <span aria-hidden="true">/</span>
+          <a href={atlasUrl(state.locale)}>GPU Kernel Atlas</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="location">GEX</span>
+        </nav>
         <label className="mobile-lessons">
           <BookOpen size={19} />
           <span className="sr-only">{tr ? "Ders seç" : "Choose lesson"}</span>
@@ -271,7 +282,7 @@ export default function App() {
           >
             <a href={servingUrl}>
               {state.locale === "tr"
-                ? "Sunuma dön → TFL"
+                ? "Model sunumuna dön → TFL"
                 : "Return to serving → TFL"}
             </a>
           </LearningContextNotice>
@@ -487,13 +498,24 @@ export default function App() {
               <p>{lesson.why[state.locale]}</p>
               <h3>{tr ? "Şimdi dene" : "Try this"}</h3>
               <p>{lesson.relatedExperiment[state.locale]}</p>
-              <p className="relationship">{lesson.relatedConcept}</p>
+              <p className="relationship">
+                {lesson.relatedConcept[state.locale]}
+              </p>
+              <h3>
+                {tr ? "Öğrenme yolundaki yeri" : "Place in the learning path"}
+              </h3>
+              <p>
+                {tr
+                  ? "GPU Kernel Atlas kuramı ve kod örneklerini açıklar. GEX, bu kavramları adım adım görselleştirir. TFL ise prefill ve decode işlemlerini model sunumu bağlamına taşır. Uygulamalar arasındaki bağlantılar gerçek GPU işi veya ölçüm aktarmaz."
+                  : "GPU Kernel Atlas explains the theory and code examples. GEX visualizes these concepts step by step. TFL places prefill and decode in the context of model serving. Links between apps do not transfer GPU work or measurements."}
+              </p>
             </section>
             <section>
               <h2>{tr ? "Kaynaklar ve kapsam" : "Sources & scope"}</h2>
               <p>
                 {lesson.category[state.locale]} ·{" "}
-                {tr ? "Kaynak kontrolü" : "Sources reviewed"} 2026-09-08
+                {tr ? "Kaynak kontrolü" : "Sources reviewed"}{" "}
+                {sourcesReviewedAt}
               </p>
               <ul>
                 {lesson.sources.map((source) => (
