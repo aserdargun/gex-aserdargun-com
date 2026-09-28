@@ -13,8 +13,9 @@
     "build": "tsc -b && vite build && node tools/static-routes.mjs && node tools/ils-manifest.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4186 --strictPort",
     "test": "vitest run",
-    "lint": "eslint src tools tests vite.config.ts",
-    "validate:codex": "npm run lint && npm test && npm run build && git diff --check",
+    "test:e2e": "playwright test",
+    "lint": "eslint src tools tests vite.config.ts e2e",
+    "validate:codex": "npm run lint && npm test && npm run build && npm run test:e2e && git diff --check",
     "assets:blender": "python3 tools/build-assets.py",
     "build:atlas": "VITE_ATLAS_DEEP_LINKS=true npm run build && node tools/stage-atlas.mjs",
     "build:azure": "npm run build && node tools/stage-azure.mjs && node tools/verify-azure.mjs",
@@ -33,7 +34,9 @@
     "@aserdargun/lab-ui": "file:vendor/aserdargun-lab-ui-0.2.0-5a573640012a6472.tgz"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.19.19",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

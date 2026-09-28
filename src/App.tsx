@@ -347,6 +347,8 @@ export default function App() {
             </div>
             <div
               className={`viewport ${state.textView ? "text-mode" : ""}`}
+              // A focusable container needs a role before aria-label is valid.
+              role="group"
               tabIndex={0}
               aria-label={
                 state.textView || sceneStatus === "unavailable"

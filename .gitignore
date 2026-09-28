@@ -3,6 +3,8 @@ dist/
 atlas-artifact/
 azure-artifact/
 .local/
+test-results/
+playwright-report/
 *.tsbuildinfo
 *.blend1
 .DS_Store
