@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#111719" />
     <meta name="description" content="See how a kernel becomes hardware execution. Explore GPU anatomy, SMs, kernel launches, SIMT, memory movement and tiled GEMM in an interactive educational 3D world." />
+    <link rel="canonical" href="https://gex.aserdargun.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GPU Execution Explorer" />
+    <meta
+      property="og:description"
+      content="Trace GPU anatomy, kernel launches, warp masks, memory access, and matrix tiles through six interactive lessons. Results come from an educational execution model, not profiler measurements."
+    />
+    <meta property="og:url" content="https://gex.aserdargun.com/" />
+    <meta property="og:site_name" content="GPU Execution Explorer" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="GPU Execution Explorer" />
+    <meta
+      name="twitter:description"
+      content="Trace GPU anatomy, kernel launches, warp masks, memory access, and matrix tiles through six interactive lessons. Results come from an educational execution model, not profiler measurements."
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
@@ -13,6 +28,27 @@
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <h1>GPU Execution Explorer</h1>
+      <p>
+        Trace GPU anatomy, kernel launches, warp masks, memory access, and matrix tiles through six
+        interactive lessons. Results come from an educational execution model, not profiler measurements.
+      </p>
+      <p>The interactive 3D explorer needs JavaScript. The six lessons it covers are:</p>
+      <ol>
+        <li>GPU Anatomy</li>
+        <li>Inside an SM</li>
+        <li>Kernel Launch</li>
+        <li>Warp / SIMT</li>
+        <li>Memory Journey</li>
+        <li>Tensor / Tiled GEMM</li>
+      </ol>
+      <p>
+        Altı etkileşimli dersle GPU anatomisini, kernel başlatmayı, warp maskelerini, bellek erişimini ve matris
+        bloklarını izle. Sonuçlar profil ölçümünden değil, eğitim amaçlı yürütme modelinden gelir. Etkileşimli
+        gezgin için JavaScript gerekir.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
