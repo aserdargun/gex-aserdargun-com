@@ -1,6 +1,7 @@
 import { cp, mkdir, rm, writeFile, readFile, readdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { robots, sitemap } from "./lesson-routes.mjs";
 
 const output = new URL("../azure-artifact/", import.meta.url);
 await rm(output, { recursive: true, force: true });
@@ -16,6 +17,11 @@ await cp(
   new URL("../staticwebapp.config.json", import.meta.url),
   new URL("staticwebapp.config.json", output),
 );
+// The crawl surface is served from the site root; the copies under gex/ arrive
+// with the recursive dist copy above. Written before the inventory so both are
+// covered by the release hashes.
+await writeFile(new URL("robots.txt", output), robots());
+await writeFile(new URL("sitemap.xml", output), sitemap());
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const files = {};
 async function inventory(dir, prefix = "") {

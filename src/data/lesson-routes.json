@@ -1,0 +1,36 @@
+{
+  "origin": "https://gex.aserdargun.com",
+  "disclaimer": "Educational execution model, not profiler measurements.",
+  "lessons": [
+    {
+      "mode": "anatomy",
+      "title": "GPU Anatomy · GEX",
+      "description": "Explore the structures that turn a kernel into parallel work. Select a part, then move closer. Educational execution model, not profiler measurements."
+    },
+    {
+      "mode": "sm",
+      "title": "Inside an SM · GEX",
+      "description": "Inspect the resources of a conceptual streaming multiprocessor. Step through a scheduler example. Educational execution model, not profiler measurements."
+    },
+    {
+      "mode": "kernel",
+      "title": "Kernel Launch · GEX",
+      "description": "Follow C[i] = A[i] + B[i] from the host to a result. Every highlighted object has a job in this story. Educational execution model, not profiler measurements."
+    },
+    {
+      "mode": "warp",
+      "title": "Warp / SIMT · GEX",
+      "description": "Explore 32 logical lanes. Change the branch, step the masks, and select a lane to inspect its state. Educational execution model, not profiler measurements."
+    },
+    {
+      "mode": "memory",
+      "title": "Memory Journey · GEX",
+      "description": "The arithmetic is unchanged. Change where lanes read and watch the address groups spread apart. Educational execution model, not profiler measurements."
+    },
+    {
+      "mode": "tensor",
+      "title": "Tensor / Tiled GEMM · GEX",
+      "description": "Follow one output tile of C = A × B. Accumulate contributions along K, then write the finished tile. Educational execution model, not profiler measurements."
+    }
+  ]
+}
