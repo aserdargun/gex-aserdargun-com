@@ -15,7 +15,7 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "lint": "eslint src tools tests vite.config.ts e2e",
-    "validate:codex": "npm run lint && npm test && npm run build && npm run test:e2e && git diff --check",
+    "validate:codex": "npm run lint && npm test && npm run build:azure && npm run test:e2e && git diff --check",
     "assets:blender": "python3 tools/build-assets.py",
     "build:atlas": "VITE_ATLAS_DEEP_LINKS=true npm run build && node tools/stage-atlas.mjs",
     "build:azure": "npm run build && node tools/stage-azure.mjs && node tools/verify-azure.mjs",
