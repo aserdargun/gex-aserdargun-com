@@ -137,6 +137,28 @@ for (const route of LESSON_ROUTES) {
   );
 }
 
+// Every non-lesson entry point must redirect instead of serving its own
+// document. `/gex` used to rewrite to gex/index.html, the un-rewritten Vite
+// entry, which advertises /gex/anatomy's canonical and og:url verbatim: a
+// seventh crawlable document duplicating a lesson under a second URL, and one
+// the sitemap never lists. The loop above only walks LESSON_ROUTES, so it could
+// not see it.
+for (const entry of ["/", "/gex"]) {
+  const rule = config.routes.find((r) => r.route === entry);
+  assert.ok(rule, `${entry} has no Azure route`);
+  assert.equal(
+    rule.redirect,
+    "/gex/anatomy",
+    `${entry} must redirect to the default lesson`,
+  );
+  assert.equal(rule.statusCode, 302, `${entry} must use a 302`);
+  assert.equal(
+    rule.rewrite,
+    undefined,
+    `${entry} must not also serve a document of its own`,
+  );
+}
+
 // The crawl surface ships at the site root and under /gex.
 const expected = { "sitemap.xml": sitemap(), "robots.txt": robots() };
 for (const [file, body] of Object.entries(expected)) {

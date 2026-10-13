@@ -63,4 +63,32 @@ describe("the deployed workflow", () => {
     expect(runSteps).toContain("npm run build:azure");
     expect(runSteps.some((s) => /^npm run build$/.test(s))).toBe(false);
   });
+
+  it("redirects every non-lesson entry point instead of serving a duplicate", () => {
+    // The six lessons are the only indexable documents. Anything else that
+    // resolves to the site must redirect to one of them: a rewrite serves a
+    // second HTML document, and /gex did so with anatomy's own canonical.
+    const azure = JSON.parse(
+      readFileSync("staticwebapp.config.json", "utf8"),
+    ) as {
+      routes: {
+        route: string;
+        rewrite?: string;
+        redirect?: string;
+        statusCode?: number;
+      }[];
+    };
+    expect(
+      azure.routes
+        .filter((r) => r.rewrite)
+        .map((r) => r.rewrite)
+        .filter((p) => p === "/gex/index.html"),
+    ).toEqual([]);
+    for (const entry of ["/", "/gex"]) {
+      const rule = azure.routes.find((r) => r.route === entry);
+      expect(rule?.redirect, `${entry} must redirect`).toBe("/gex/anatomy");
+      expect(rule?.statusCode, `${entry} status`).toBe(302);
+      expect(rule?.rewrite, `${entry} must not serve a document`).toBeUndefined();
+    }
+  });
 });

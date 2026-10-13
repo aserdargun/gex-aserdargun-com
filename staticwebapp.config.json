@@ -7,7 +7,8 @@
     },
     {
       "route": "/gex",
-      "rewrite": "/gex/index.html"
+      "redirect": "/gex/anatomy",
+      "statusCode": 302
     },
     {
       "route": "/gex/anatomy",
