@@ -3,7 +3,7 @@ import { Copy, Check, Download } from "lucide-react";
 import { lessons } from "../data/lessons";
 import type { ExplorerState } from "../data/types";
 import { stepForState } from "../lib/presentation";
-import { addressForLane } from "../lib/simulation";
+import { addressForLane, MATRIX_N, MEMORY_VALUES } from "../lib/simulation";
 
 export function codeForState(state: ExplorerState) {
   const code = [...lessons[state.mode].code];
@@ -17,10 +17,10 @@ export function codeForState(state: ExplorerState) {
         ? "int address = lane;"
         : state.pattern === "strided"
           ? `int address = lane * ${state.stride};`
-          : "int address = (lane * 73 + 19) % 256;";
+          : `int address = (lane * 73 + 19) % ${MEMORY_VALUES};`;
   if (state.mode === "tensor") {
     code[0] = `acc = zeros(${state.tileSize}, ${state.tileSize});`;
-    code[1] = `for (k = 0; k < 8; k += ${state.tileSize}) {`;
+    code[1] = `for (k = 0; k < ${MATRIX_N}; k += ${state.tileSize}) {`;
     code[5] = state.tensorPath
       ? "  acc += matrix_multiply(a_tile, b_tile);"
       : "  acc += scalar_dot_products(a_tile, b_tile);";

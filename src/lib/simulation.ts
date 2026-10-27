@@ -7,6 +7,13 @@ export const VALUES_PER_GROUP = contract.constants.valuesPerGroup;
 export const MEMORY_VALUES = contract.constants.memoryValues;
 export const BYTES_PER_VALUE = contract.constants.bytesPerValue;
 
+/** The block sizes the teaching model offers. The smallest is one full warp. */
+export const THREAD_OPTIONS = [WARP_SIZE, 64, 128, 256];
+/** The address strides the memory lesson asks the reader to try, in elements. */
+export const STRIDE_OPTIONS = [1, 2, 4, 8];
+/** The teaching tile sizes of the tensor lesson. */
+export const TILE_SIZES = [2, 4];
+
 /** A reproducible permutation, deliberately unlike contiguous addresses. */
 export function addressForLane(lane: number, pattern: Pattern, stride = 8) {
   if (pattern === "strided") return lane * stride;
@@ -61,12 +68,14 @@ export function vectorChecksum(elements: number) {
 
 export const MATRIX_N = contract.constants.matrixN;
 export const matrixA = Array.from(
-  { length: 64 },
-  (_, i) => ((Math.floor(i / 8) + (i % 8)) % 4) + 1,
+  { length: MATRIX_N * MATRIX_N },
+  (_, i) =>
+    ((Math.floor(i / MATRIX_N) + (i % MATRIX_N)) % 4) + 1,
 );
 export const matrixB = Array.from(
-  { length: 64 },
-  (_, i) => ((Math.floor(i / 8) * 2 + (i % 8)) % 3) + 1,
+  { length: MATRIX_N * MATRIX_N },
+  (_, i) =>
+    ((Math.floor(i / MATRIX_N) * 2 + (i % MATRIX_N)) % 3) + 1,
 );
 export function matrixCell(row: number, col: number, kEnd = MATRIX_N) {
   let sum = 0;
@@ -75,20 +84,21 @@ export function matrixCell(row: number, col: number, kEnd = MATRIX_N) {
   return sum;
 }
 export function matrixResult(kEnd = MATRIX_N) {
-  return Array.from({ length: 64 }, (_, i) =>
-    matrixCell(Math.floor(i / 8), i % 8, kEnd),
+  return Array.from({ length: MATRIX_N * MATRIX_N }, (_, i) =>
+    matrixCell(Math.floor(i / MATRIX_N), i % MATRIX_N, kEnd),
   );
 }
 export function selectedTile(cell: number, tileSize: number) {
   return {
-    row: Math.floor(Math.floor(cell / 8) / tileSize) * tileSize,
-    col: Math.floor((cell % 8) / tileSize) * tileSize,
+    row: Math.floor(Math.floor(cell / MATRIX_N) / tileSize) * tileSize,
+    col: Math.floor((cell % MATRIX_N) / tileSize) * tileSize,
   };
 }
 export function tileCells(cell: number, tileSize: number) {
   const { row, col } = selectedTile(cell, tileSize);
   return Array.from(
     { length: tileSize * tileSize },
-    (_, i) => (row + Math.floor(i / tileSize)) * 8 + col + (i % tileSize),
+    (_, i) =>
+      (row + Math.floor(i / tileSize)) * MATRIX_N + col + (i % tileSize),
   );
 }

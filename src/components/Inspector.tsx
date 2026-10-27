@@ -9,6 +9,8 @@ import {
   vectorElement,
   vectorChecksum,
   matrixCell,
+  MATRIX_N,
+  VALUES_PER_GROUP,
 } from "../lib/simulation";
 import type { Explorer } from "../lib/useExplorer";
 import { atlasUrl } from "../lib/links";
@@ -196,7 +198,7 @@ export function Inspector(explorer: Explorer) {
                   {tr ? "şerit" : "lane"} {state.selectedLane} → A[
                   {mem.addresses[state.selectedLane]}]<br />
                   {tr ? "Grup" : "Group"}{" "}
-                  {Math.floor(mem.addresses[state.selectedLane] / 8)}
+                  {Math.floor(mem.addresses[state.selectedLane] / VALUES_PER_GROUP)}
                 </div>
                 <small>
                   {tr
@@ -216,9 +218,9 @@ export function Inspector(explorer: Explorer) {
                       patch({ selectedCell: Number(e.target.value) })
                     }
                   >
-                    {Array.from({ length: 64 }, (_, i) => (
+                    {Array.from({ length: MATRIX_N * MATRIX_N }, (_, i) => (
                       <option key={i} value={i}>
-                        C[{Math.floor(i / 8)},{i % 8}]
+                        C[{Math.floor(i / MATRIX_N)},{i % MATRIX_N}]
                       </option>
                     ))}
                   </select>
@@ -226,7 +228,7 @@ export function Inspector(explorer: Explorer) {
                 <dl className="readout">
                   <div>
                     <dt>{tr ? "K döşemeleri" : "K tiles"}</dt>
-                    <dd>{8 / state.tileSize}</dd>
+                    <dd>{MATRIX_N / state.tileSize}</dd>
                   </div>
                   <div>
                     <dt>{tr ? "Döşemedeki çıktılar" : "Outputs in tile"}</dt>
@@ -238,9 +240,9 @@ export function Inspector(explorer: Explorer) {
                       {state.step < 4
                         ? 0
                         : matrixCell(
-                            Math.floor(state.selectedCell / 8),
-                            state.selectedCell % 8,
-                            state.step === 4 ? state.tileSize : 8,
+                            Math.floor(state.selectedCell / MATRIX_N),
+                            state.selectedCell % MATRIX_N,
+                            state.step === 4 ? state.tileSize : MATRIX_N,
                           )}
                     </dd>
                   </div>

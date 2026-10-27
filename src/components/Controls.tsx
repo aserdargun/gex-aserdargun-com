@@ -3,6 +3,7 @@ import { manifest } from "../ils/catalog";
 import { Play, Pause, SkipForward, RotateCcw, ChevronLeft } from "lucide-react";
 import { lessons } from "../data/lessons";
 import { stepForState } from "../lib/presentation";
+import { THREAD_OPTIONS, TILE_SIZES } from "../lib/simulation";
 import type { Explorer } from "../lib/useExplorer";
 
 export function Playback({ state, act, patch }: Explorer) {
@@ -162,7 +163,7 @@ export function ExperimentControls({ state, patch }: Explorer) {
                 change({ threads: Number(e.target.value), step: 0 })
               }
             >
-              {[32, 64, 128, 256].map((n) => (
+              {THREAD_OPTIONS.map((n) => (
                 <option key={n}>{n}</option>
               ))}
             </select>
@@ -256,8 +257,11 @@ export function ExperimentControls({ state, patch }: Explorer) {
               value={state.tileSize}
               onChange={(e) => change({ tileSize: Number(e.target.value) })}
             >
-              <option value={2}>2 × 2</option>
-              <option value={4}>4 × 4</option>
+              {TILE_SIZES.map((size) => (
+                <option key={size} value={size}>
+                  {size} × {size}
+                </option>
+              ))}
             </select>
           </label>
           <div

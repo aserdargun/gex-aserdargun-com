@@ -1,6 +1,13 @@
 import { lessons, modes } from "../data/lessons";
 import { components } from "../data/components";
 import type { ComponentId, ExplorerState, Mode } from "../data/types";
+import {
+  MATRIX_N,
+  STRIDE_OPTIONS,
+  THREAD_OPTIONS,
+  TILE_SIZES,
+  WARP_SIZE,
+} from "./simulation";
 
 export const initialState: ExplorerState = {
   mode: "anatomy",
@@ -11,7 +18,7 @@ export const initialState: ExplorerState = {
   threads: 128,
   blocks: 8,
   pattern: "contiguous",
-  stride: 8,
+  stride: STRIDE_OPTIONS.at(-1)!,
   branch: "divergent",
   cacheHit: false,
   tileSize: 2,
@@ -106,15 +113,18 @@ export function parseLocation(url: URL): ExplorerState {
   const route = url.pathname.replace(/\/+$/, "").split("/").pop();
   const mode = modes.includes(route as Mode) ? (route as Mode) : "anatomy";
   const q = url.searchParams;
-  const threads = integer(q.get("threads"), 128, 32, 256);
-  const stride = integer(q.get("stride"), 8, 1, 8);
+  const smallestThread = THREAD_OPTIONS[0];
+  const largestThread = THREAD_OPTIONS.at(-1)!;
+  const largestStride = STRIDE_OPTIONS.at(-1)!;
+  const threads = integer(q.get("threads"), 128, smallestThread, largestThread);
+  const stride = integer(q.get("stride"), largestStride, 1, largestStride);
   const component = q.get("part");
   return {
     ...initialState,
     mode,
     locale: q.get("lang") === "tr" ? "tr" : "en",
     step: integer(q.get("step"), 0, 0, lessons[mode].steps.length - 1),
-    threads: [32, 64, 128, 256].includes(threads) ? threads : 128,
+    threads: THREAD_OPTIONS.includes(threads) ? threads : 128,
     blocks: integer(q.get("blocks"), 8, 1, 16),
     pattern:
       q.get("pattern") === "strided"
@@ -122,13 +132,13 @@ export function parseLocation(url: URL): ExplorerState {
         : q.get("pattern") === "scattered"
           ? "scattered"
           : "contiguous",
-    stride: [1, 2, 4, 8].includes(stride) ? stride : 8,
+    stride: STRIDE_OPTIONS.includes(stride) ? stride : STRIDE_OPTIONS.at(-1)!,
     branch: q.get("branch") === "uniform" ? "uniform" : "divergent",
     cacheHit: q.get("cache") === "hit",
-    tileSize: q.get("tile") === "4" ? 4 : 2,
+    tileSize: q.get("tile") === String(TILE_SIZES.at(-1)) ? TILE_SIZES.at(-1)! : TILE_SIZES[0],
     tensorPath: q.get("compute") !== "scalar",
-    selectedLane: integer(q.get("lane"), 0, 0, 31),
-    selectedCell: integer(q.get("cell"), 0, 0, 63),
+    selectedLane: integer(q.get("lane"), 0, 0, WARP_SIZE - 1),
+    selectedCell: integer(q.get("cell"), 0, 0, MATRIX_N * MATRIX_N - 1),
     textView: q.get("view") === "text",
     selectedComponent:
       component && Object.hasOwn(components, component)
