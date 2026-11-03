@@ -8,6 +8,7 @@ import {
   MATRIX_N,
   MEMORY_VALUES,
   STRIDE_OPTIONS,
+  spelledCount,
   TEACHING_SMS,
   THREAD_OPTIONS,
   TILE_SIZES,
@@ -200,10 +201,13 @@ it("publishes the matrix size and the sums the reference computes", () => {
 
 it("publishes the same numbers in the curriculum document", () => {
   // The curriculum spells some of them out, so the words are checked too.
-  const spelled: Record<number, string> = { 1: "one", 4: "four", 8: "eight" };
-  expect(curriculum).toContain(`${spelled[TEACHING_SMS]} teaching SMs`);
+  // The words themselves come from the model, so a count the model changed
+  // cannot leave one spelling behind.
   expect(curriculum).toContain(
-    `${spelled[VALUES_PER_GROUP]} ${BYTES_PER_VALUE * 8}-bit values`,
+    `${spelledCount(TEACHING_SMS, "en")} teaching SMs`,
+  );
+  expect(curriculum).toContain(
+    `${spelledCount(VALUES_PER_GROUP, "en")} ${BYTES_PER_VALUE * 8}-bit values`,
   );
   holds(sentence("32-bit values"), [
     BYTES_PER_VALUE * 8,

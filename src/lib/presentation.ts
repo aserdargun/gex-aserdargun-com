@@ -1,6 +1,43 @@
 import { lessons } from "../data/lessons";
-import { l, type ExplorerState, type LessonStep } from "../data/types";
-import { launchShape, TEACHING_SMS } from "./simulation";
+import { l, type Branch, type ExplorerState, type LessonStep, type Locale } from "../data/types";
+import {
+  laneMask,
+  launchShape,
+  spelledCount,
+  TEACHING_SMS,
+  WARP_SIZE,
+} from "./simulation";
+
+/** The label the scene shows above a warp: which path it is on, and how many
+ * of its lanes are active.
+ *
+ * The scene used to write the counts out - "16 / 32", "0 / 32", "32 / 32" -
+ * while the mask model decided which lanes are active, and the warp size came
+ * from a literal in the same file. The counts are read from the mask here, so
+ * the label cannot describe something other than what the model selected. */
+export function warpLabel(
+  branch: Branch,
+  step: number,
+  locale: Locale,
+  asKernel = false,
+): string {
+  if (asKernel)
+    return locale === "tr" ? "BLOK 0 / WARP 0" : "BLOCK 0 / WARP 0";
+  const active = laneMask(branch, step).filter(Boolean).length;
+  const path =
+    branch === "divergent" && step === 2
+      ? locale === "tr"
+        ? "A YOLU"
+        : "PATH A"
+      : step === 3
+        ? locale === "tr"
+          ? "B YOLU"
+          : "PATH B"
+        : null;
+  return path
+    ? `${path} · ${active} / ${WARP_SIZE}`
+    : `WARP 0 · ${active} / ${WARP_SIZE}`;
+}
 
 /** One explanation for the scene, text alternative, timeline and code panel. */
 export function stepForState(state: ExplorerState): LessonStep {
@@ -40,8 +77,8 @@ export function stepForState(state: ExplorerState): LessonStep {
         "Bu başlatma için tek dalga yeterli.",
       ),
       body: l(
-        "All blocks fit in the four teaching SM slots. There are no remaining waves to repeat; continue to the calculated result.",
-        "Tüm bloklar dört eğitim SM’sindeki yerlere sığar. Tekrarlanacak başka dalga yok; hesaplanan sonuca geç.",
+        `All blocks fit in the ${spelledCount(TEACHING_SMS, "en")} teaching SM slots. There are no remaining waves to repeat; continue to the calculated result.`,
+        `Tüm bloklar ${spelledCount(TEACHING_SMS, "tr")} eğitim SM’sindeki yerlere sığar. Tekrarlanacak başka dalga yok; hesaplanan sonuca geç.`,
       ),
     };
   if (state.mode === "warp" && state.branch === "uniform") {

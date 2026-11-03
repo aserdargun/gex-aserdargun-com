@@ -3,7 +3,8 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import type { ExplorerState } from "../data/types";
-import { laneMask, launchShape, TEACHING_SMS } from "../lib/simulation";
+import { laneMask, launchShape, TEACHING_SMS, WARP_SIZE } from "../lib/simulation";
+import { warpLabel } from "../lib/presentation";
 import {
   Cubes,
   Label,
@@ -29,10 +30,10 @@ export function Warp({
   asKernel?: boolean;
 }) {
   const mask = asKernel
-    ? Array(32).fill(true)
+    ? Array(WARP_SIZE).fill(true)
     : laneMask(state.branch, state.step);
   const waiting = asKernel && [8, 9].includes(state.step);
-  const items = Array.from({ length: 32 }, (_, id) => ({
+  const items = Array.from({ length: WARP_SIZE }, (_, id) => ({
     id,
     position: lanePosition(id),
     color: waiting
@@ -68,13 +69,7 @@ export function Warp({
         <Label position={[0, 0.6, -3.15]} tone="compute">
           {asKernel
             ? `${state.locale === "tr" ? "BLOK" : "BLOCK"} 0 / WARP 0`
-            : state.branch === "divergent" && state.step === 2
-              ? `${state.locale === "tr" ? "A YOLU" : "PATH A"} · 16 / 32`
-              : state.branch === "divergent" && state.step === 3
-                ? `${state.locale === "tr" ? "B YOLU" : "PATH B"} · 16 / 32`
-                : state.branch === "uniform" && state.step === 3
-                  ? `${state.locale === "tr" ? "B YOLU" : "PATH B"} · 0 / 32`
-                  : "WARP 0 · 32 / 32"}
+            : warpLabel(state.branch, state.step, state.locale)}
         </Label>
       )}
     </group>
@@ -92,9 +87,9 @@ function MovingBlock({
   const group = useRef<THREE.Group>(null);
   const invalidate = useThree((s) => s.invalidate);
   const from: Point = [
-    -4.5 + (id % 4) * 1.05,
+    -4.5 + (id % TEACHING_SMS) * 1.05,
     0.4,
-    -2.3 + Math.floor(id / 4) * 1.5,
+    -2.3 + Math.floor(id / TEACHING_SMS) * 1.5,
   ];
   useEffect(() => {
     if (state.reducedMotion && group.current)
@@ -185,8 +180,8 @@ export function Kernel({
   if (state.step === 3 || state.step === 4) {
     const warps = shape.warpsPerBlock;
     const items = Array.from({ length: state.threads }, (_, id) => {
-      const warp = Math.floor(id / 32),
-        lane = id % 32;
+      const warp = Math.floor(id / WARP_SIZE),
+        lane = id % WARP_SIZE;
       const separated = state.step === 4;
       return {
         id,
@@ -256,20 +251,20 @@ export function Kernel({
           const scheduled =
             state.step >= 2 && (state.step >= 13 || id < TEACHING_SMS);
           const target: Point = scheduled
-            ? [3.3, 0.65, ((id % 4) - 1.5) * 1.8]
-            : [-4.5 + (id % 4) * 1.05, 0.4, -2.3 + Math.floor(id / 4) * 1.5];
+            ? [3.3, 0.65, ((id % TEACHING_SMS) - 1.5) * 1.8]
+            : [-4.5 + (id % TEACHING_SMS) * 1.05, 0.4, -2.3 + Math.floor(id / TEACHING_SMS) * 1.5];
           if (state.step >= 13 && id < (shape.waves - 1) * TEACHING_SMS)
             return null;
           return <MovingBlock key={id} id={id} target={target} state={state} />;
         })
       )}
-      {Array.from({ length: 4 }, (_, i) => (
+      {Array.from({ length: TEACHING_SMS }, (_, i) => (
         <group key={i}>
           <Part
             position={[3.3, 0.0, (i - 1.5) * 1.8]}
             size={[3.3, 0.22, 1.5]}
             color={
-              state.step === 14 && i < Math.min(4, state.blocks)
+              state.step === 14 && i < Math.min(TEACHING_SMS, state.blocks)
                 ? palette.memory
                 : palette.muted
             }

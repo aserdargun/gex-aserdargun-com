@@ -1,4 +1,4 @@
-import type { Branch, Pattern } from "../data/types";
+import type { Branch, Locale, Pattern } from "../data/types";
 
 import contract from "../data/model-contract.json";
 export const WARP_SIZE = contract.constants.warpSize;
@@ -6,6 +6,28 @@ export const TEACHING_SMS = contract.constants.teachingSms;
 export const VALUES_PER_GROUP = contract.constants.valuesPerGroup;
 export const MEMORY_VALUES = contract.constants.memoryValues;
 export const BYTES_PER_VALUE = contract.constants.bytesPerValue;
+
+/** The counts in words, for prose that names a number.
+ *
+ * The explanations used to write the teaching SM count out as a word, and the
+ * contract test kept a second map of the same words. The count belongs to the
+ * contract, so the spelling lives next to it and both read it from here. */
+const COUNT_WORDS: Record<number, Record<Locale, string>> = {
+  1: { en: "one", tr: "bir" },
+  2: { en: "two", tr: "iki" },
+  3: { en: "three", tr: "üç" },
+  4: { en: "four", tr: "dört" },
+  5: { en: "five", tr: "beş" },
+  6: { en: "six", tr: "altı" },
+  7: { en: "seven", tr: "yedi" },
+  8: { en: "eight", tr: "sekiz" },
+};
+/** The count in words. Throws if the model names a count this cannot spell. */
+export const spelledCount = (count: number, locale: Locale): string => {
+  const words = COUNT_WORDS[count];
+  if (!words) throw new Error(`UNSPELLED_COUNT ${count}`);
+  return words[locale];
+};
 
 /** The block sizes the teaching model offers. The smallest is one full warp. */
 export const THREAD_OPTIONS = [WARP_SIZE, 64, 128, 256];

@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { stepForState } from "../src/lib/presentation";
+import { stepForState, warpLabel } from "../src/lib/presentation";
 import {
   initialState,
   parseLocation,
@@ -12,6 +13,12 @@ import { lessons, modes } from "../src/data/lessons";
 import { CodePanel, codeForState } from "../src/components/CodePanel";
 import { TextView } from "../src/components/TextView";
 import type { ExplorerState } from "../src/data/types";
+import {
+  laneMask,
+  spelledCount,
+  TEACHING_SMS,
+  WARP_SIZE,
+} from "../src/lib/simulation";
 
 const patch = () => {};
 describe("consistent lesson observations", () => {
@@ -125,5 +132,58 @@ describe("consistent lesson observations", () => {
     expect(stepForState(moved)).toEqual(stepForState(state));
     expect(codeForState(moved)).toEqual(codeForState(state));
     expect(moved.step).toBe(9);
+  });
+});
+
+describe("the scene and the explanation read the model's own numbers", () => {
+  it("labels a warp with the lanes the mask selects", () => {
+    for (const branch of ["uniform", "divergent"] as const) {
+      for (let step = 0; step < 6; step++) {
+        const active = laneMask(branch, step).filter(Boolean).length;
+        const label = warpLabel(branch, step, "en");
+        expect(label, `${branch} step ${step}`).toContain(
+          `${active} / ${WARP_SIZE}`,
+        );
+      }
+    }
+    // The path the label names is the path the mask shows.
+    expect(warpLabel("divergent", 2, "en")).toBe(`PATH A · 16 / ${WARP_SIZE}`);
+    expect(warpLabel("divergent", 3, "en")).toBe(`PATH B · 16 / ${WARP_SIZE}`);
+    expect(warpLabel("uniform", 3, "en")).toBe(`PATH B · 0 / ${WARP_SIZE}`);
+    expect(warpLabel("uniform", 2, "en")).toBe(`WARP 0 · 32 / ${WARP_SIZE}`);
+    // The Turkish label names the same path with the same count.
+    expect(warpLabel("divergent", 2, "tr")).toBe(`A YOLU · 16 / ${WARP_SIZE}`);
+    expect(warpLabel("uniform", 3, "tr")).toBe(`B YOLU · 0 / ${WARP_SIZE}`);
+  });
+
+  it("names the teaching SM count in the explanation the way the model counts it", () => {
+    const body = stepForState({
+      ...initialState,
+      mode: "kernel",
+      step: 13,
+      blocks: TEACHING_SMS,
+    }).body;
+    expect(body.en).toContain(
+      `the ${spelledCount(TEACHING_SMS, "en")} teaching SM slots`,
+    );
+    expect(body.tr).toContain(
+      `${spelledCount(TEACHING_SMS, "tr")} eğitim SM’sindeki yerlere`,
+    );
+  });
+
+  it("writes no model number into the scene by hand", () => {
+    const scene = readFileSync(
+      new URL("../src/scene/Execution.tsx", import.meta.url),
+      "utf8",
+    );
+    // The scene used to spell out the warp size, the lane counts and the
+    // number of teaching SM slots while importing the same constants.
+    expect(scene).toContain("warpLabel(");
+    expect(scene).toContain("WARP_SIZE");
+    expect(scene).toContain("TEACHING_SMS");
+    expect(scene).not.toMatch(/· \d+ \/ \d+/);
+    expect(scene).not.toMatch(/\b(id % 32|id \/ 32|Math\.floor\(id \/ 32\))/);
+    expect(scene).not.toMatch(/length: 4[,)]/);
+    expect(scene).not.toMatch(/Math\.min\(4,/);
   });
 });
